@@ -9,7 +9,6 @@ import {
   Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/signUp.dto';
 import { LoginDto } from './dto/logIn.dto';
 import { User } from './schemas/user.schema';
 import { Public } from './decorator/public.decorator';
@@ -32,7 +31,8 @@ export class AuthController {
     return this.authService.logIn(loginDto);
   }
 
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
+  @Public()
   @Get('users')
   async getUsers(): Promise<User[]> {
     return this.authService.getUsers();
@@ -49,7 +49,7 @@ export class AuthController {
   @Put('update/:id')
   async updateUser(
     @Param('id') id: string,
-    @Body() userDto: SignUpDto,
+    @Body() userDto: LoginDto,
   ): Promise<User> {
     const objectId = new ObjectId(id);
     return this.authService.updateUser(objectId, userDto);

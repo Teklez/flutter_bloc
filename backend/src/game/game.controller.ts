@@ -23,9 +23,9 @@ export class GameController {
     return this.gameService.getGames();
   }
   
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   @Public()
-  @Post()
+  @Post("/add")
   async createGame(@Body() gameDto: GameDto): Promise<Game> {
     return this.gameService.createGame(gameDto);
   }
@@ -35,7 +35,7 @@ export class GameController {
   async getGame(@Param('id') id: string): Promise<Game> {
     return this.gameService.getGame(id);
   }
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   @Public()
   @Put('update/:id')
   async updateGame(
@@ -44,7 +44,7 @@ export class GameController {
   ): Promise<Game> {
     return this.gameService.updateGame(id, gameDto);
   }
-  @Roles(Role.Admin)
+  
   @Public()
   @Delete('delete/:id')
   async deleteGame(@Param('id') id: string): Promise<Game> {

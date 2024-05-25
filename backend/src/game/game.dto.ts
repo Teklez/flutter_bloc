@@ -5,5 +5,5 @@ export class GameDto {
   releaseDate: string;
   rating: number = 0;
   reviews: string[] = [];
-  imageUrl: string;
+  image: string;
 }

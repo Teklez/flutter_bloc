@@ -1,30 +1,46 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/model/game.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/game/game_bloc.dart';
+import 'package:frontend/game/game_events.dart';
+import 'package:frontend/game/game_model.dart';
+import 'package:frontend/game/game_states.dart';
+import 'package:frontend/presentation/screens/game_detail.dart';
 
-class SearchPage extends StatelessWidget {
+
+class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
   @override
+  _SearchPageState createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  final TextEditingController _searchController = TextEditingController();
+  List<Game> _filteredGames = [];
+  bool _hasSearched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+    context.read<GameBloc>().add(FetchGames());
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _hasSearched = query.isNotEmpty;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    const searchResults = [
-      Game(
-          name: "Poker",
-          image: "assets/game4.jpg",
-          publisher: "Publisher:NIC private Inc."),
-      Game(
-          name: "Russian Resulate",
-          image: "assets/game3.jpg",
-          publisher: "Publisher: NIC private Inc."),
-      Game(
-          name: "Blackjack",
-          image: "assets/game2.jpg",
-          publisher: "Publisher: NIC private Inc."),
-      Game(
-          name: "Slot Machine",
-          image: "assets/game1.jpg",
-          publisher: "Publisher: NIC private Inc."),
-    ];
     return Material(
       child: Container(
         padding: const EdgeInsets.all(16.0),
@@ -47,9 +63,10 @@ class SearchPage extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () => Navigator.pop(context),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: _searchController,
+                        decoration: const InputDecoration(
                           hintText: 'Search...',
                           border: InputBorder.none,
                         ),
@@ -61,11 +78,36 @@ class SearchPage extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Expanded(
-              child: ListView.builder(
-                itemCount: searchResults
-                    .length, // Use the length of your game objects list
-                itemBuilder: (context, index) =>
-                    _buildSearchResultTile(searchResults[index], context),
+              child: BlocBuilder<GameBloc, GameState>(
+                builder: (context, state) {
+                  if (state is GameLoadSuccess) {
+                    final games = state.games;
+                    _filteredGames = games.where((game) {
+                      final query = _searchController.text.toLowerCase();
+                      return game.name.toLowerCase().contains(query);
+                    }).toList();
+
+                    if (!_hasSearched) {
+                      return const Center(
+                          child: Text('No games to display. Please search.'));
+                    }
+
+                    if (_filteredGames.isEmpty) {
+                      return const Center(
+                          child: Text('No games match your search.'));
+                    }
+
+                    return ListView.builder(
+                      itemCount: _filteredGames.length,
+                      itemBuilder: (context, index) => _buildSearchResultTile(
+                          _filteredGames[index], context),
+                    );
+                  } else if (state is GameError) {
+                    return Center(child: Text('Failed to load games'));
+                  } else {
+                    return const Center(child: Text('No games available'));
+                  }
+                },
               ),
             ),
           ],
@@ -73,9 +115,8 @@ class SearchPage extends StatelessWidget {
       ),
     );
   }
-  // Replace with your image URL
 
-  Widget _buildSearchResultTile(game, context) {
+  Widget _buildSearchResultTile(Game game, BuildContext context) {
     return ListTile(
       leading: Container(
         width: 100,
@@ -92,10 +133,10 @@ class SearchPage extends StatelessWidget {
       title: Text(game.name),
       subtitle: Text(game.publisher),
       trailing: const Row(
-        mainAxisSize: MainAxisSize.min, // Condense trailing widgets
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "4.5",
+            "4.5", 
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
@@ -104,12 +145,14 @@ class SearchPage extends StatelessWidget {
           Icon(
             Icons.star,
             color: Colors.yellow,
-          ), // Replace with actual rating logic
+          ),
         ],
       ),
       onTap: () {
-        print("tapped");
-        Navigator.pushNamed(context, "/game_details");
+        MaterialPageRoute route = MaterialPageRoute(
+          builder: (context) => GameDetailPage(game: game),
+        );
+        Navigator.push(context, route);
       },
     );
   }

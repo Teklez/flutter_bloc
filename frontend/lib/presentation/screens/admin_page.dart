@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/game.dart';
-import 'package:frontend/presentation/widgets/custom_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/game/game_bloc.dart';
+import 'package:frontend/game/game_events.dart';
+import 'package:frontend/game/game_states.dart';
 
+import 'package:frontend/presentation/widgets/custom_card.dart';
 import 'package:frontend/presentation/widgets/drawer.dart';
 
 class AdminPage extends StatelessWidget {
@@ -9,68 +12,49 @@ class AdminPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GameBloc gameBloc = BlocProvider.of<GameBloc>(context);
+
+    // Trigger fetching games when the page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      gameBloc.add(const FetchGames());
+    });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 211, 47, 47),
         title: const Text("BetEbet"),
       ),
-      drawer: const MenuDrawer(menuItems: [
-        ["Home", "/admin"],
-        ["Users", "/users"],
-        ["Add Game", "/add_game"],
-        ["Logout", "/login"]
-      ]),
-      body: GridView.count(
-        crossAxisCount: 1,
-        padding: const EdgeInsets.all(40.0),
-        childAspectRatio: 8.0 / 10.0,
-        children: const <Widget>[
-          AGameCard(
-            game: Game(
-              name: "Poker",
-              image: "assets/game1.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          AGameCard(
-            game: Game(
-              name: "Russian Roulette",
-              image: "assets/game4.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          AGameCard(
-            game: Game(
-              name: "Blackjack",
-              image: "assets/game3.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          AGameCard(
-            game: Game(
-              name: "Slot Machine",
-              image: "assets/game2.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          AGameCard(
-            game: Game(
-              name: "Roulette",
-              image: "assets/game5.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
+      drawer: const MenuDrawer(
+        menuItems: [
+          ["Home", "/admin"],
+          ["Users", "/users"],
+          ["Profile", "/profile"],
+          ["Add Game", "/add_game"],
+          ["Logout", "/login"]
         ],
+      ),
+      body: BlocBuilder<GameBloc, GameState>(
+        builder: (context, state) {
+          if (state is GameEmpty) {
+            print("No games found");
+            return const Center(child: Text("No games found"));
+          } else if (state is GameLoadSuccess) {
+            return GridView.count(
+              crossAxisCount: 1,
+              padding: const EdgeInsets.all(20.0),
+              childAspectRatio: 8.0 / 10.0,
+              children: state.games.map((game) {
+                return AGameCard(
+                  game: game,
+                );
+              }).toList(),
+            );
+          } else if (state is GameError) {
+            return Center(child: Text("Error loading games"));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/game.dart';
+import 'package:frontend/game/game_model.dart';
 import 'package:frontend/presentation/widgets/custom_card.dart';
 
 class GameDetailPage extends StatelessWidget {
-  const GameDetailPage({super.key});
+  final Game game;
+  const GameDetailPage({super.key, required this.game});
 
   @override
   Widget build(BuildContext context) {
@@ -16,15 +17,7 @@ class GameDetailPage extends StatelessWidget {
           },
         ),
       ),
-      body: const GameDetail(
-        game: Game(
-          name: "Russian Roulette",
-          image: "assets/game4.jpg",
-          publisher: "New Youk Times Best seller",
-          description: "hell of a game",
-          releaseDate: "2021-10-10",
-        ),
-      ),
+      body: GameDetail(game: game),
     );
   }
 }

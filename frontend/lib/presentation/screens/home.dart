@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/game/game_bloc.dart';
+import 'package:frontend/game/game_events.dart';
+import 'package:frontend/game/game_states.dart';
 import 'package:frontend/presentation/widgets/custom_card.dart';
-import 'package:frontend/model/game.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
-
 import 'package:frontend/presentation/widgets/drawer.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,9 +12,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GameBloc gameBloc = BlocProvider.of<GameBloc>(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      gameBloc.add(const FetchGames());
+    });
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 211, 47, 47),
+        backgroundColor: Color.fromRGBO(41, 37, 37, 1),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
@@ -32,115 +38,32 @@ class HomePage extends StatelessWidget {
       drawer: const MenuDrawer(
         menuItems: [
           ["Home", "/"],
+          ["Profile", "/profile"],
           ["About", "/about"],
           ["Logout", "/login"],
         ],
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.all(16.0),
-        childAspectRatio: 8.0 / 10.0,
-        children: const <Widget>[
-          GameCard(
-            game: Game(
-              name: "Poker",
-              image: "assets/game4.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Russian Roulette",
-              image: "assets/game3.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Blackjack",
-              image: "assets/game2.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Slot Machine",
-              image: "assets/game5.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Roulette",
-              image: "assets/game1.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Blackjack",
-              image: "assets/game6.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Slot Machine",
-              image: "assets/game7.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Roulette",
-              image: "assets/game8.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Poker",
-              image: "assets/game9.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Russian Roulette",
-              image: "assets/game10.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-          GameCard(
-            game: Game(
-              name: "Blackjack",
-              image: "assets/game11.jpg",
-              rating: 4.5,
-              publisher: "publisher: NIC private Inc.",
-              releaseDate: "2021-10-10",
-            ),
-          ),
-        ],
+      body: BlocBuilder<GameBloc, GameState>(
+        builder: (context, state) {
+          if (state is GameEmpty) {
+            return const Center(child: Text("No games found"));
+          } else if (state is GameLoadSuccess) {
+            return GridView.count(
+              crossAxisCount: 2,
+              padding: const EdgeInsets.all(16.0),
+              childAspectRatio: 8.0 / 10.0,
+              children: state.games.map((game) {
+                return GameCard(
+                  game: game,
+                );
+              }).toList(),
+            );
+          } else if (state is GameError) {
+            return Center(child: Text("Error loading games"));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }

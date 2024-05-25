@@ -15,8 +15,8 @@ export class User extends mongoose.Document {
   @Prop({ default: 'unblocked' })
   status: string;
 
-  // Add role field with default value of 'user'`````
-  @Prop({ default: [Role.Admin] })
+  // Add role field with default value of 'user'
+  @Prop({ default: [Role.User] })
   roles: Role[];
 }
 

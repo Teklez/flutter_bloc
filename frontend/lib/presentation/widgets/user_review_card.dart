@@ -29,7 +29,8 @@ class UserReview extends StatelessWidget {
                         color: Colors.grey[350])),
               ],
             ),
-            const EditDeleteDialogue(route: "/review-edit"),
+            const EditDeleteDialogue(
+                route: "/review-edit", data: "game", feature: "review"),
           ],
         ),
         const SizedBox(

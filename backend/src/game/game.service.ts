@@ -18,7 +18,7 @@ export class GameService {
   ) {}
 
   async getGames(): Promise<Game[]> {
-    const games = await this.gameModel.find();
+    const games = await this.gameModel.find().sort({ createdAt: -1 }).exec();
     return games;
   }
 
@@ -40,11 +40,14 @@ export class GameService {
     if (!game) {
       throw new NotFoundException('Game not found');
     }
+    game.image = gameDto.image;
     game.name = gameDto.name;
     game.description = gameDto.description;
     game.publisher = gameDto.publisher;
     game.releaseDate = gameDto.releaseDate;
-    return await game.save();
+    await game.save();
+    
+    return game;
   }
 
   async deleteGame(id: ObjectId): Promise<Game> {

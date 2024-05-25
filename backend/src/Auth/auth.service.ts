@@ -10,7 +10,6 @@ import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { SignUpDto } from './dto/signUp.dto';
 import { LoginDto } from './dto/logIn.dto';
 import { ObjectId } from 'mongodb';
 import { Request } from 'express';
@@ -60,7 +59,7 @@ export class AuthService {
 
   // login service
 
-  async logIn(loginDto): Promise<any> {
+  async logIn(loginDto: LoginDto): Promise<any> {
     const user = await this.userModel
       .findOne({ username: loginDto.username })
       .lean()
@@ -107,7 +106,7 @@ export class AuthService {
   }
 
   // update user
-  async updateUser(id: ObjectId, user: SignUpDto): Promise<User> {
+  async updateUser(id: ObjectId, user: LoginDto): Promise<User> {
     const newPassword = await bcrypt.hash(user.password, 10);
     user.password = newPassword;
     const updatedUser = await this.userModel.findByIdAndUpdate(id, user, {

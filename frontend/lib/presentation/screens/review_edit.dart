@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:frontend/presentation/widgets/clickableStar.dart';
 
 import 'package:frontend/presentation/widgets/rating.dart';
 
 import 'package:readmore/readmore.dart';
-import 'package:flutter/material.dart';
 
 class ReviewEdit extends StatelessWidget {
   @override

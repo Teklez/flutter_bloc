@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { Role } from '../enums/role.enum';
 
 export class LoginDto {
@@ -15,5 +15,5 @@ export class LoginDto {
   status: string = 'unblocked';
 
   // Add role field with default value of 'user'
-  roles: Role[];
+  roles: Role[] = [Role.User];
 }

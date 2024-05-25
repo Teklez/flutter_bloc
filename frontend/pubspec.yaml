@@ -37,6 +37,10 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   readmore: ^3.0.0
   popover: ^0.2.8+2
+  flutter_bloc:
+  equatable:
+  http:
+  go_router:
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +76,10 @@ flutter:
     - assets/game9.jpg
     - assets/game10.jpg
     - assets/game11.jpg
+    - assets/game12.jpg
+    - assets/game13.png
+    - assets/game14.jpg
+    - assets/game15.jpeg
     - assets/logo.jpg
     - assets/profile2.jpg
     - assets/RussianRoulette.jpg

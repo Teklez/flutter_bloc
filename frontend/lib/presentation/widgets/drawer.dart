@@ -38,8 +38,7 @@ class MenuDrawer extends StatelessWidget {
         ListTile(
           title: Text(item[0]),
           onTap: () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, "${item[1]}", (route) => false);
+            Navigator.pushNamed(context, "${item[1]}");
           },
         ),
       );

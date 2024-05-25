@@ -15,7 +15,7 @@ export class Game {
   releaseDate: string;
   reviews: [{ type: mongoose.Schema.Types.ObjectId; ref: 'Review' }];
   @Prop()
-  imageUrl: string;
+  image: string;
 
 }
 

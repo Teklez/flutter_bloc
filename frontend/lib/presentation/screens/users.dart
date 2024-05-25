@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/user.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
 import 'package:frontend/presentation/widgets/drawer.dart';
+import 'package:frontend/users/users_bloc.dart';
+import 'package:frontend/users/users_event.dart';
+import 'package:frontend/users/users_state.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List users = [
-      User(name: "User 1", role: "Admin"),
-      User(name: "User 2", role: "User"),
-      User(name: "User 3", role: "User"),
-      User(name: "User 4", role: "User"),
-      User(name: "User 5", role: "User"),
-      User(name: "User 6", role: "User"),
-      User(name: "User 7", role: "User"),
-      User(name: "User 8", role: "User"),
-      User(name: "User 9", role: "User"),
-      User(name: "User 10", role: "User"),
-    ];
+    final UsersBloc userBloc = BlocProvider.of<UsersBloc>(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      userBloc.add(const FetchUsers());
+    });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 211, 47, 47),
@@ -31,9 +27,20 @@ class UsersPage extends StatelessWidget {
         ["Add Game", '/add_game'],
         ["Logout", '/login']
       ]),
-      body: ListView(
-        padding: const EdgeInsets.all(8.0),
-        children: _buildUserCard(users),
+      body: BlocBuilder<UsersBloc, UsersState>(
+        builder: (context, state) {
+          if (state is UsersEmpty) {
+            return const Center(child: Text("No users found"));
+          } else if (state is UsersLoadSuccess) {
+            return ListView(
+              children: _buildUserCard(state.users),
+            );
+          } else if (state is UsersError) {
+            return Center(child: Text("Error loading users"));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }
@@ -44,9 +51,15 @@ class UsersPage extends StatelessWidget {
       var card = Card(
         child: ListTile(
           leading: Icon(Icons.person, color: Color.fromARGB(255, 211, 47, 47)),
-          title: Text(users[i].name),
-          subtitle: Text(users[i].role),
-          trailing: const BlockRole(),
+          title: Text(users[i].username),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Role: ${users[i].roles}"),
+              Text("Status: ${users[i].status}"),
+            ],
+          ),
+          trailing: BlockRole(user: users[i]),
         ),
       );
       cards.add(card);

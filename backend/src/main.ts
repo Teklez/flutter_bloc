@@ -23,7 +23,7 @@ async function bootstrap() {
   app.use(passport.session());
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://127.0.0.1:5500',
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });

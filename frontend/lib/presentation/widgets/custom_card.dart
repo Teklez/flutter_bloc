@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/game.dart';
+import 'package:frontend/game/game_model.dart';
 import 'package:frontend/presentation/screens/game_detail.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
 //============================================================================== USER GAME CARD =================================================================
@@ -58,7 +58,8 @@ class GameCard extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const GameDetailPage()),
+                                builder: (context) =>
+                                    GameDetailPage(game: game)),
                           );
                         },
                         icon: const Icon(
@@ -132,8 +133,10 @@ class AGameCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
-                      const EditDeleteDialogue(
+                      EditDeleteDialogue(
+                        data: game,
                         route: "/add_game",
+                        feature: "game",
                       ),
                     ],
                   ),
@@ -207,15 +210,15 @@ class GameDetail extends StatelessWidget {
                       print("betted");
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
+                      backgroundColor: WidgetStateProperty.all(
                           const Color.fromARGB(
                               255, 207, 75, 91)), // Set background color
-                      foregroundColor: MaterialStateProperty.all(
+                      foregroundColor: WidgetStateProperty.all(
                           Colors.white), // Set text color
-                      padding: MaterialStateProperty.all(
+                      padding: WidgetStateProperty.all(
                           const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10)), // Set padding
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
