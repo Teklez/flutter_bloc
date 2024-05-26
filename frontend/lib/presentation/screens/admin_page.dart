@@ -23,6 +23,17 @@ class AdminPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 211, 47, 47),
         title: const Text("BetEbet"),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+              semanticLabel: 'search',
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/search');
+            },
+          ),
+        ],
       ),
       drawer: const MenuDrawer(
         menuItems: [

@@ -34,9 +34,41 @@ class MenuDrawer extends StatelessWidget {
   List<ListTile> _buildTile(menuItems, context) {
     List<ListTile> tiles = [];
     for (var item in menuItems) {
+      var icon;
+      switch (item[0]) {
+        case "Home":
+          icon = Icons.home;
+          break;
+        case "Profile":
+          icon = Icons.person;
+          break;
+        case "About":
+          icon = Icons.info;
+          break;
+        case "Logout":
+          icon = Icons.logout;
+          break;
+        case "Users":
+          icon = Icons.people;
+          break;
+        case "Add Game":
+          icon = Icons.add;
+          break;
+        default:
+          Icons.home;
+      }
       tiles.add(
         ListTile(
-          title: Text(item[0]),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Icon(icon),
+              const SizedBox(
+                width: 40,
+              ),
+              Text(item[0]),
+            ],
+          ),
           onTap: () {
             Navigator.pushNamed(context, "${item[1]}");
           },
