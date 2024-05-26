@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/auth/auth_bloc.dart';
+import 'package:frontend/auth/auth_repository.dart';
+import 'package:frontend/auth/auth_service.dart';
 import 'package:frontend/game/game_bloc.dart';
 import 'package:frontend/game/game_model.dart';
 import 'package:frontend/game/game_repository.dart';
@@ -32,8 +35,14 @@ class BetApp extends StatelessWidget {
     final gameService = GameService();
     final gameRepository = GameRepository(gameService);
 
+    // Initialize UserRepository
     final userService = UsersService();
     final userRepository = UsersRepository(userService: userService);
+
+    // Initialize AuthRepository
+
+    final authService = AuthService();
+    final authRepository = AuthRepository(authService: authService);
 
     return MultiBlocProvider(
       providers: [
@@ -42,6 +51,9 @@ class BetApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => UsersBloc(userRepository),
+        ),
+        BlocProvider(
+          create: (context) => AuthBloc(authRepository: authRepository),
         ),
       ],
       child: MaterialApp(

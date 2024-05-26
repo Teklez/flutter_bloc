@@ -41,6 +41,8 @@ dependencies:
   equatable:
   http:
   go_router:
+  shared_preferences:
+  jwt_decoder:
 
 dev_dependencies:
   flutter_test:
