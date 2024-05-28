@@ -55,7 +55,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthFailure(message: 'Not authenticated'));
       }
     } catch (e) {
-      emit(AuthFailure(message: 'Not authenticated'));
+      if (e.toString().contains('IncorrectPassword')) {
+        emit(AuthFailure(message: 'Incorrect password'));
+      } else {
+        emit(AuthFailure(message: 'User name or password is incorrect'));
+      }
     }
   }
 
@@ -64,10 +68,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _handleUserLoggedOut(
       UserLoggedOut event, Emitter<AuthState> emit) async {
     try {
-      await authRepository.logout(event.id);
-      emit(AuthFailure(message: 'Not authenticated'));
+      await authRepository.logout(event.message);
+      emit(AuthFailure(message: 'Logged out successfully'));
     } catch (e) {
-      emit(AuthFailure(message: 'Not authenticated'));
+      emit(AuthFailure(message: 'Failed to logout'));
     }
   }
 
@@ -84,10 +88,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthFailure(message: 'null returned from register user'));
       }
     } catch (e) {
-      print("\n" * 100);
-      print(e);
-      print("\n" * 100);
-      emit(AuthFailure(message: 'Fialed to register user'));
+      if (e.toString().contains('userAlreadyExists')) {
+        emit(AuthFailure(message: 'User Name is already taken'));
+      } else {
+        emit(AuthFailure(message: 'Failed to register user'));
+      }
     }
   }
 
@@ -96,9 +101,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _handleUserDeleted(UserDeleted event, Emitter<AuthState> emit) async {
     try {
       await authRepository.delete(event.id);
-      emit(AuthFailure(message: 'Not authenticated'));
     } catch (e) {
-      emit(AuthFailure(message: 'Not authenticated'));
+      emit(AuthFailure(message: "Failed to delete user"));
     }
   }
 

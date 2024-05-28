@@ -11,7 +11,6 @@ export class Review {
   rating: number;
   @Prop()
   date: string;
-  game: { type: mongoose.Schema.Types.ObjectId; ref: 'Game' };
   user: { type: mongoose.Schema.Types.ObjectId; ref: 'User' };
 }
 

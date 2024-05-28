@@ -69,16 +69,17 @@ export class AuthService {
       throw new HttpException('userNotFound', HttpStatus.NOT_FOUND);
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      loginDto.password,
-      user.password,
-    );
+    if (user.roles[0] == 'admin') {
+      var isPasswordValid = user.password == loginDto.password;
+    } else {
+      isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
+    }
 
     if (!isPasswordValid) {
-      console.log('incorrect password');
+      console.log('password incorrect');
       throw new HttpException('incorrectPassword', HttpStatus.UNAUTHORIZED);
     }
-    console.log('logging in user', user);
+
     const payload = {
       sub: user['_id'],
       username: user.username,
@@ -97,22 +98,57 @@ export class AuthService {
   //   signup service
 
   async signUp(loginDto: LoginDto): Promise<User> {
-    console.log(loginDto.password);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(loginDto.password, salt);
     loginDto.password = hashedPassword;
+    let existingUser = await this.userModel
+      .findOne({ username: loginDto.username })
+      .exec();
+    console.log(existingUser);
+    if (existingUser != null) {
+      throw new HttpException('userExists', HttpStatus.BAD_REQUEST);
+    }
     const user = new this.userModel(loginDto);
     return await user.save();
   }
 
-  // update user
-  async updateUser(id: ObjectId, user: LoginDto): Promise<User> {
-    const newPassword = await bcrypt.hash(user.password, 10);
-    user.password = newPassword;
-    const updatedUser = await this.userModel.findByIdAndUpdate(id, user, {
-      new: true,
-    });
+  // update user info
+
+  async userInfoUpdate(id: ObjectId, loginDto: LoginDto): Promise<User> {
+    const user = await this.userModel.findById(id).exec();
+    user.status = loginDto.status;
+    user.roles = loginDto.roles;
+    const updatedUser = await user.save();
     return updatedUser;
+  }
+
+  // update user
+  async updateUser(
+    id: ObjectId,
+    oldPassword: string,
+    newPassword: string,
+    newName: string,
+  ): Promise<User> {
+    const user = await this.userModel.findById(id).exec();
+
+    const isPasswordSame = await this.passworMatch(oldPassword, user.password);
+    if (!isPasswordSame) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    // user.username = newName;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    user.password = hashedPassword;
+    user.username = newName;
+    console.log(
+      'updating user _________________________________________________-',
+    );
+    const cu = await user.save();
+    const loginDto = new LoginDto();
+    loginDto.username = newName;
+    loginDto.password = newPassword;
+    return await this.logIn(loginDto);
   }
 
   // delete user

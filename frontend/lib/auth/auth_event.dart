@@ -20,10 +20,10 @@ class UserLoggedIn extends AuthEvent {
 }
 
 class UserLoggedOut extends AuthEvent {
-  final String id;
-  const UserLoggedOut({required this.id});
+  final Map<String, dynamic> message;
+  const UserLoggedOut({required this.message});
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [message];
 }
 
 class UserRegistered extends AuthEvent {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/game/game_events.dart';
 import 'package:frontend/game/game_model.dart';
-
 import '../../game/game_bloc.dart';
 
 class AddGameForm extends StatefulWidget {
@@ -17,6 +16,7 @@ class AddGameForm extends StatefulWidget {
 }
 
 class _AddGameFormState extends State<AddGameForm> {
+  final _formKey = GlobalKey<FormState>();
   late TextEditingController _imageUrlController;
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
@@ -47,10 +47,6 @@ class _AddGameFormState extends State<AddGameForm> {
   @override
   Widget build(BuildContext context) {
     final GameBloc gameBloc = BlocProvider.of<GameBloc>(context);
-    print('\n' * 100);
-    print('hwllowlkjsaflasdjfkalsdjfaskljfalsdfalsdfasldf');
-    print(widget.initialGame);
-    print('\n' * 100);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.buttonName == 'Add' ? 'Add Game' : 'Edit Game'),
@@ -58,70 +54,100 @@ class _AddGameFormState extends State<AddGameForm> {
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.only(top: 50.0, left: 18.0, right: 18.0),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _imageUrlController,
-                decoration: const InputDecoration(
-                  labelText: "Image URL",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: "Name",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: "Description",
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 5,
-              ),
-              const SizedBox(height: 10.0),
-              TextFormField(
-                controller: _publisherController,
-                decoration: const InputDecoration(
-                  labelText: "Publisher",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/admin');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
-                    ),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Color.fromARGB(255, 211, 63, 63)),
-                    ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _imageUrlController,
+                  decoration: const InputDecoration(
+                    labelText: "Image URL",
+                    border: OutlineInputBorder(),
                   ),
-                  const SizedBox(width: 10.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      _saveGame(context, gameBloc);
-                    },
-                    child: Text(
-                      widget.buttonName,
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 47, 211, 151)),
-                    ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an image URL';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10.0),
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: "Name",
+                    border: OutlineInputBorder(),
                   ),
-                ],
-              ),
-            ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10.0),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: "Description",
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 5,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a description';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10.0),
+                TextFormField(
+                  controller: _publisherController,
+                  decoration: const InputDecoration(
+                    labelText: "Publisher",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a publisher';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/admin');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[300],
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 211, 63, 63)),
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _saveGame(context, gameBloc);
+                        }
+                      },
+                      child: Text(
+                        widget.buttonName,
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 47, 211, 151)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -130,7 +156,7 @@ class _AddGameFormState extends State<AddGameForm> {
 
   void _saveGame(BuildContext context, GameBloc gameBloc) {
     final game = Game(
-      id: widget.initialGame?.id ?? '4',
+      id: widget.initialGame?.id ?? '',
       name: _nameController.text.trim(),
       description: _descriptionController.text.trim(),
       image: _imageUrlController.text.trim(),
@@ -145,9 +171,6 @@ class _AddGameFormState extends State<AddGameForm> {
       });
     } else {
       // Edit existing game
-      print("\n" * 10);
-      print(game.toString());
-      print("\n" * 10);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         gameBloc.add(EditGame(game));
       });

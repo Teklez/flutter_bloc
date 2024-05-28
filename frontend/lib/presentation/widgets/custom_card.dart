@@ -233,7 +233,11 @@ class GameDetail extends StatelessWidget {
                       const Text("See review"),
                       IconButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, "/review");
+                          Navigator.pushNamed(
+                            context,
+                            "/review",
+                            arguments: {'gameId': game.id},
+                          );
                         },
                         icon: const Icon(Icons.arrow_forward),
                       ),

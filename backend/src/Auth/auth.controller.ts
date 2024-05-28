@@ -16,10 +16,12 @@ import { ObjectId } from 'mongodb';
 import { Role } from './enums/role.enum';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorator/roels.decorator';
-import {Request} from 'express';
+import { Request } from 'express';
+import { userInfo } from 'os';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
   @Public()
   @Post('signup')
   async signUp(@Body() loginDto: LoginDto): Promise<User> {
@@ -47,12 +49,25 @@ export class AuthController {
 
   @Public()
   @Put('update/:id')
-  async updateUser(
+  async userInfoUpdate(
     @Param('id') id: string,
-    @Body() userDto: LoginDto,
+    @Body() loginDto,
   ): Promise<User> {
     const objectId = new ObjectId(id);
-    return this.authService.updateUser(objectId, userDto);
+    return this.authService.userInfoUpdate(objectId, loginDto);
+  }
+
+  @Public()
+  @Put('user/update/:id')
+  async updateUser(@Param('id') id: string, @Body() updatedata): Promise<User> {
+    const objectId = new ObjectId(id);
+
+    return this.authService.updateUser(
+      objectId,
+      updatedata.oldPassword,
+      updatedata.newPassword,
+      updatedata.username,
+    );
   }
   @Public()
   @Delete('delete/:id')
@@ -61,9 +76,11 @@ export class AuthController {
     const objectId = new ObjectId(id);
     return this.authService.deleteUser(objectId);
   }
-
+  @Public()
   @Get('/logout')
   async logOut(@Req() req: Request): Promise<any> {
     return this.authService.logout(req);
   }
 }
+
+

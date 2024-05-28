@@ -20,6 +20,9 @@ import 'package:frontend/presentation/screens/search.dart';
 import 'package:frontend/presentation/screens/users.dart';
 import 'package:frontend/presentation/screens/onboarding_screen.dart';
 import 'package:frontend/presentation/widgets/rating_page.dart';
+import 'package:frontend/review/review_bloc.dart';
+import 'package:frontend/review/review_repository.dart';
+import 'package:frontend/review/review_service.dart';
 import 'package:frontend/users/users_bloc.dart';
 import 'package:frontend/users/users_repository.dart';
 import 'package:frontend/users/users_service.dart';
@@ -44,6 +47,10 @@ class BetApp extends StatelessWidget {
     final authService = AuthService();
     final authRepository = AuthRepository(authService: authService);
 
+    // Initialize the ReviewRepository
+    final reviewService = ReviewService();
+    final reviewRepository = ReviewRepository(reviewService);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -54,6 +61,9 @@ class BetApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => AuthBloc(authRepository: authRepository),
+        ),
+        BlocProvider(
+          create: (context) => ReviewBloc(reviewRepository),
         ),
       ],
       child: MaterialApp(

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:frontend/auth/auth_event.dart';
 import 'package:frontend/auth/auth_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -9,7 +11,6 @@ class AuthService {
   static const baseUrl = 'http://127.0.0.1:5500';
 
   // login user
-
   Future<Map<String, dynamic>> login(String username, String password) async {
     try {
       final response = await http.post(
@@ -26,6 +27,8 @@ class AuthService {
         await prefs.setString('access_token', access_token);
 
         return await getCurrentUserFromStoredToken();
+      } else if (response.statusCode == HttpStatus.unauthorized) {
+        throw Exception('IncorrectPassword');
       } else {
         throw Exception('Failed to login: ${response.statusCode}');
       }
@@ -66,6 +69,8 @@ class AuthService {
       );
       if (response.statusCode == 201) {
         return login(username, password);
+      } else if (response.statusCode == 400) {
+        throw Exception('userAlreadyExists');
       } else {
         throw Exception('Failed to register: ${response.statusCode}');
       }
@@ -85,11 +90,11 @@ class AuthService {
 
   // update user
 
-  Future<AuthModel> update(String id, String username, String newPassword,
+  Future<String> update(String id, String username, String newPassword,
       String oldPassword) async {
     try {
       final response = await http.put(
-        Uri.parse('$baseUrl/auth/update/$id'),
+        Uri.parse('$baseUrl/auth/user/update/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -100,7 +105,10 @@ class AuthService {
         }),
       );
       if (response.statusCode == 200) {
-        return AuthModel.fromJson(json.decode(response.body));
+        final access_token = response.body;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('access_token', access_token);
+        return access_token;
       } else {
         throw Exception('Failed to update: ${response.statusCode}');
       }
@@ -111,9 +119,13 @@ class AuthService {
 
   // logout user
 
-  Future<void> logout(id) async {
-    final response = await http.get(Uri.parse('$baseUrl/auth/logout/id'));
-    if (response.statusCode != 200) {
+  Future<void> logout(message) async {
+    final response = await http.get(Uri.parse('$baseUrl/auth/logout'));
+
+    if (response.statusCode == 200) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('access_token');
+    } else {
       throw Exception('Failed to logout');
     }
   }

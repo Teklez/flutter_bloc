@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/auth/auth_bloc.dart';
+import 'package:frontend/auth/auth_event.dart';
 import 'package:frontend/game/game_bloc.dart';
 import 'package:frontend/game/game_events.dart';
 import 'package:frontend/presentation/screens/game_add.dart';
@@ -176,11 +178,17 @@ class AreYouSureDialogue extends StatelessWidget {
                 usersBloc.add(ChangeStatus(data));
               });
               // add the logic to change user role
+            } else if (feature == 'logout') {
+              BlocProvider.of<AuthBloc>(context)
+                  .add(UserLoggedOut(message: data));
             }
 
             // the same for review feature
 
             Navigator.pop(context);
+            if (feature == 'logout') {
+              Navigator.pushNamed(context, '/login');
+            }
           },
           child: const Text("Yes"),
         ),

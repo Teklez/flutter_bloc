@@ -24,6 +24,7 @@ class UsersPage extends StatelessWidget {
       drawer: const MenuDrawer(menuItems: [
         ["Home", '/admin'],
         ["Users", '/users'],
+        ["Profile", '/profile'],
         ["Add Game", '/add_game'],
         ["Logout", '/login']
       ]),

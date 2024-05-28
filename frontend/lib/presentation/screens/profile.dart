@@ -19,6 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
       TextEditingController();
 
   bool _isEditing = false;
+  String _errorText = '';
 
   @override
   void dispose() {
@@ -32,20 +33,30 @@ class _ProfilePageState extends State<ProfilePage> {
   void _toggleEditMode() {
     setState(() {
       _isEditing = !_isEditing;
+      _errorText = ''; // Clear error text when toggling edit mode
     });
   }
 
-  void _saveProfile(id, user) {
+  void _saveProfile(String id, String user) {
     String username = _usernameController.text;
     String oldPassword = _oldPasswordController.text;
     String newPassword = _newPasswordController.text;
     String confirmPassword = _confirmPasswordController.text;
 
     if (newPassword != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('New password and confirm password do not match')),
-      );
+      setState(() {
+        _errorText = 'New password and confirm password do not match';
+      });
+      return;
+    }
+
+    if (username.isEmpty ||
+        oldPassword.isEmpty ||
+        newPassword.isEmpty ||
+        confirmPassword.isEmpty) {
+      setState(() {
+        _errorText = 'All fields are required';
+      });
       return;
     }
 
@@ -76,113 +87,106 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-          if (state is AuthSuccess && !_isEditing) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Profile updated successfully')),
-            );
-            _toggleEditMode();
-          }
-        },
-        child: BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) {
-            String username = '';
-            String id = '';
-            if (state is AuthSuccess) {
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          String username = 'username';
+          String id = '';
+          if (state is AuthSuccess) {
+            if (state.message != null) {
               final message = state.message;
               username = message['username'];
               id = message['sub'];
             }
+          }
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Icon(Icons.account_circle, size: 100),
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Icon(Icons.account_circle, size: 100),
+                const SizedBox(height: 16),
+                Center(
+                  child: Text(
+                    username,
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _toggleEditMode,
+                  child: Text(_isEditing ? 'Cancel' : 'Edit Profile'),
+                ),
+                if (_isEditing) ...[
                   const SizedBox(height: 16),
-                  Center(
-                    child: Text(
-                      username,
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  TextField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _toggleEditMode,
-                    child: Text(_isEditing ? 'Cancel' : 'Edit Profile'),
+                  TextField(
+                    controller: _oldPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Old Password',
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
                   ),
-                  if (_isEditing) ...[
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _usernameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Username',
-                        border: OutlineInputBorder(),
-                      ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _newPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: 'New Password',
+                      border: OutlineInputBorder(),
                     ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _oldPasswordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Old Password',
-                        border: OutlineInputBorder(),
-                      ),
-                      obscureText: true,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _confirmPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Confirm New Password',
+                      border: OutlineInputBorder(),
                     ),
+                    obscureText: true,
+                  ),
+                  if (_errorText.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    TextField(
-                      controller: _newPasswordController,
-                      decoration: const InputDecoration(
-                        labelText: 'New Password',
-                        border: OutlineInputBorder(),
-                      ),
-                      obscureText: true,
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _confirmPasswordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Confirm New Password',
-                        border: OutlineInputBorder(),
-                      ),
-                      obscureText: true,
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        _saveProfile(id, username);
-                        if (state is AuthSuccess){
-                          Navigator.pushNamed(context, '/profile');
-                        }
-                      },
-                      child: const Text('Save'),
+                    Text(
+                      _errorText,
+                      style: TextStyle(color: Colors.red),
                     ),
                   ],
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      _deleteAccount(id);
-                      
-                      Navigator.pushNamed(context, '/register');
+                      _saveProfile(id, username);
+
+                      if (state is AuthSuccess) {
+                        Navigator.popAndPushNamed(context, '/profile');
+                      }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                    ),
-                    child: const Text('Delete Account'),
+                    child: const Text('Save'),
                   ),
                 ],
-              ),
-            );
-          },
-        ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    _deleteAccount(id);
+                    Navigator.pushNamed(context, '/register');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  child: const Text('Delete Account'),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

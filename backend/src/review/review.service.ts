@@ -7,6 +7,7 @@ import { ReviewDto } from './review.dto';
 
 import { Game } from 'src/game/game.schema';
 import { User } from 'src/Auth/schemas/user.schema';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class ReviewService {
@@ -19,14 +20,29 @@ export class ReviewService {
     private gameModel: Model<Game>,
   ) {}
 
-  async getReviews(): Promise<Review[]> {
-    const reviews = await this.reviewModel.find();
+  async getReviews(gameId): Promise<Review[]> {
+    const id = new ObjectId(gameId);
+    const game = await this.gameModel.findById(id);
+    // collect review Ids associated with the given game
+    const gameReviews = game.reviews;
+    let reviews = [];
+    for (let rid of gameReviews) {
+      let review = await this.reviewModel.findById(rid);
+      reviews.push(review);
+    }
+
     return reviews;
   }
 
-  async createReview(reviewDto: ReviewDto): Promise<Review> {
+  async createReview(reviewDto: ReviewDto, gameId: string): Promise<Review> {
+    const id = new ObjectId(gameId);
+    const game = await this.gameModel.findById(id);
     const review = new this.reviewModel(reviewDto);
-    return await review.save();
+    const newReview = await review.save();
+    game.reviews.push(newReview._id);
+    game.save();
+
+    return review;
   }
 
   async getReview(id: string): Promise<Review> {

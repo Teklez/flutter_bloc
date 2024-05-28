@@ -11,19 +11,23 @@ import { ReviewService } from './review.service';
 import { ReviewDto } from './review.dto';
 import { Review } from './review.schema';
 import { Public } from 'src/Auth/decorator/public.decorator';
+import { ObjectId } from 'mongodb';
 
 @Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
-
-  @Get()
-  async getReviews(): Promise<Review[]> {
-    return this.reviewService.getReviews();
+  @Public()
+  @Get('/game/:gameId')
+  async getReviews(@Param('gameId') gameId: string): Promise<Review[]> {
+    return this.reviewService.getReviews(gameId);
   }
   @Public()
-  @Post()
-  async createReview(@Body() reviewDto: ReviewDto): Promise<Review> {
-    return this.reviewService.createReview(reviewDto);
+  @Post('/game/:gameId')
+  async createReview(
+    @Body() reviewDto: ReviewDto,
+    @Param('gameId') gameId: string,
+  ): Promise<Review> {
+    return this.reviewService.createReview(reviewDto, gameId);
   }
 
   @Public()
