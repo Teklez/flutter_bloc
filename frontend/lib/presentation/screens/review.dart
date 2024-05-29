@@ -8,20 +8,29 @@ import 'package:frontend/review/review_event.dart';
 import 'package:frontend/review/review_model.dart';
 import 'package:frontend/review/review_state.dart';
 
-class ReviewPage extends StatelessWidget {
+class ReviewPage extends StatefulWidget {
   const ReviewPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  _ReviewPageState createState() => _ReviewPageState();
+}
+
+class _ReviewPageState extends State<ReviewPage> {
+  late String gameId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final Map<String, dynamic>? arguments =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-
-    final String gameId = arguments?['gameId'];
-
+    gameId = arguments?['gameId'];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<ReviewBloc>(context).add(FetchReviews(gameId));
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -42,11 +51,7 @@ class ReviewPage extends StatelessWidget {
           var totalRating = 0.0;
           var totalReviews = 0;
 
-          if (state is ReviewLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is ReviewsLoadSuccess) {
+          if (state is ReviewsLoadSuccess) {
             reviews = state.reviews;
             totalReviews = reviews.length;
             for (var review in reviews) {
@@ -130,10 +135,9 @@ class ReviewPage extends StatelessWidget {
                   Text(
                     totalReviews.toString(),
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[200],
-                    ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[200]),
                   ),
                   const SizedBox(
                     height: 20,

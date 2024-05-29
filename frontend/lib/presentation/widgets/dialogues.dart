@@ -196,11 +196,16 @@ class AreYouSureDialogue extends StatelessWidget {
             } else if (feature == 'review') {
               BlocProvider.of<ReviewBloc>(context)
                   .add(DeleteReview(data['data'].id, data['gameId']));
+            } else if (feature == 'profile') {
+              BlocProvider.of<AuthBloc>(context).add(UserDeleted(id: data));
             }
 
             // the same for review feature
 
             Navigator.pop(context);
+            if (feature == 'profile') {
+              Navigator.pushNamed(context, '/register');
+            }
             if (feature == 'logout') {
               Navigator.pushNamed(context, '/login');
             }

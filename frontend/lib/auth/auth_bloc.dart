@@ -25,7 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await authRepository.getCurrentUser();
       emit(AuthSuccess(message: user));
     } catch (e) {
-      emit(AuthFailure(message: 'Not authenticated'));
+      emit(const AuthFailure(message: 'Not authenticated'));
     }
   }
 
@@ -37,10 +37,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user != null) {
         emit(AuthSuccess(message: user));
       } else {
-        emit(AuthFailure(message: 'Not authenticated'));
+        emit(const AuthFailure(message: 'Not authenticated'));
       }
     } catch (e) {
-      emit(AuthFailure(message: 'Not authenticated'));
+      emit(const AuthFailure(message: 'Not authenticated'));
     }
   }
 
@@ -52,13 +52,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (token != null) {
         emit(AuthSuccess(message: token));
       } else {
-        emit(AuthFailure(message: 'Not authenticated'));
+        emit(const AuthFailure(message: 'Not authenticated'));
       }
     } catch (e) {
       if (e.toString().contains('IncorrectPassword')) {
-        emit(AuthFailure(message: 'Incorrect password'));
+        emit(const AuthFailure(message: 'Incorrect password'));
       } else {
-        emit(AuthFailure(message: 'User name or password is incorrect'));
+        emit(const AuthFailure(message: 'User name or password is incorrect'));
       }
     }
   }
@@ -85,13 +85,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user != null) {
         emit(AuthSuccess(message: user));
       } else {
-        emit(AuthFailure(message: 'null returned from register user'));
+        emit(const AuthFailure(message: 'null returned from register user'));
       }
     } catch (e) {
       if (e.toString().contains('userAlreadyExists')) {
-        emit(AuthFailure(message: 'User Name is already taken'));
+        emit(const AuthFailure(message: 'User Name is already taken'));
       } else {
-        emit(AuthFailure(message: 'Failed to register user'));
+        emit(const AuthFailure(message: 'Failed to register user'));
       }
     }
   }
@@ -102,7 +102,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await authRepository.delete(event.id);
     } catch (e) {
-      emit(AuthFailure(message: "Failed to delete user"));
+      emit(const AuthFailure(message: "Failed to delete user"));
     }
   }
 
@@ -112,12 +112,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           event.id, event.username, event.newPassword, event.oldPassword);
 
       if (data != null) {
-        emit(UpdateSuccess(message: "Profile updated"));
+        emit(const UpdateSuccess(message: "Profile updated"));
       } else {
-        emit(AuthFailure(message: 'update failed'));
+        emit(const AuthFailure(message: 'update failed'));
       }
     } catch (e) {
-      emit(AuthFailure(message: ''));
+      emit(const AuthFailure(message: ''));
     }
   }
 }

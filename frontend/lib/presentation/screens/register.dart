@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/auth_bloc.dart';
 import 'package:frontend/auth/auth_event.dart';
 import 'package:frontend/auth/auth_state.dart';
+import 'package:frontend/presentation/screens/home.dart';
 import 'package:frontend/presentation/screens/login.dart';
-import 'package:frontend/presentation/screens/profile.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -63,8 +63,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 children: [
                   Container(
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 211, 47, 47),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 211, 47, 47),
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.elliptical(60, 60),
                       ),
@@ -72,9 +72,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20.0),
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             shape: BoxShape.circle, color: Colors.white),
-                        child: Icon(
+                        child: const Icon(
                           Icons.person,
                           size: 50,
                           color: Color.fromARGB(255, 59, 2, 2),
@@ -112,7 +112,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           if (_errorMessage != null) ...[
                             Text(
                               _errorMessage!,
-                              style: TextStyle(color: Colors.red),
+                              style: const TextStyle(color: Colors.red),
                             ),
                             const SizedBox(height: 10),
                           ],
@@ -163,7 +163,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       const Color.fromARGB(255, 211, 47, 47),
-                                  shape: RoundedRectangleBorder(
+                                  shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10.0))),
                                 ),
@@ -180,7 +180,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const ProfilePage(),
+                                              const HomePage(),
                                         ),
                                       );
                                     }
@@ -213,7 +213,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     ),
                                   );
                                 },
-                                child: Text(
+                                child: const Text(
                                   "Login",
                                   style: TextStyle(
                                       fontSize: 16,
@@ -243,7 +243,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       validator: validator,
     );

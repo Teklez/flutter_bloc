@@ -18,6 +18,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
 
   void _handleFetchReviews(
       FetchReviews event, Emitter<ReviewState> emit) async {
+    // emit(ReviewLoading());
     try {
       final List<Review> reviews =
           await reviewRepository.getReviews(event.gameId);

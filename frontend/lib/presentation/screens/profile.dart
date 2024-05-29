@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/auth_bloc.dart';
 import 'package:frontend/auth/auth_event.dart';
 import 'package:frontend/auth/auth_state.dart';
+import 'package:frontend/presentation/widgets/dialogues.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -60,8 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
       return;
     }
 
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-    authBloc.add(UserUpdated(
+    BlocProvider.of<AuthBloc>(context).add(UserUpdated(
         id: id,
         username: username == '' ? user : username,
         oldPassword: oldPassword,
@@ -69,20 +69,18 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   String _deleteAccount(String id) {
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      authBloc.add(UserDeleted(id: id));
-    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AreYouSureDialogue(data: id, feature: "profile");
+      },
+    );
     return id;
   }
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      authBloc.add(CurrentUser());
-    });
-
+    BlocProvider.of<AuthBloc>(context).add(CurrentUser());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -109,7 +107,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 Center(
                   child: Text(
                     username,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -157,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 16),
                     Text(
                       _errorText,
-                      style: TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.red),
                     ),
                   ],
                   const SizedBox(height: 16),
@@ -176,7 +175,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ElevatedButton(
                   onPressed: () {
                     _deleteAccount(id);
-                    Navigator.pushNamed(context, '/register');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
