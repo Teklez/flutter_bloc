@@ -9,12 +9,15 @@ import { Model } from 'mongoose';
 import { Game } from './game.schema';
 import { GameDto } from './game.dto';
 import { ObjectId } from 'mongodb';
+import { Review } from 'src/review/review.schema';
 
 @Injectable()
 export class GameService {
   constructor(
     @InjectModel(Game.name)
     private gameModel: Model<Game>,
+    @InjectModel('Review')
+    private reviewModel: Model<Review>,
   ) {}
 
   async getGames(): Promise<Game[]> {
@@ -46,7 +49,7 @@ export class GameService {
     game.publisher = gameDto.publisher;
     game.releaseDate = gameDto.releaseDate;
     await game.save();
-    
+
     return game;
   }
 
@@ -55,6 +58,11 @@ export class GameService {
     if (!game) {
       throw new NotFoundException('Game not found');
     }
+    const reviews = game.reviews;
+    for (let reviewId of reviews) {
+      await this.reviewModel.findByIdAndDelete(reviewId);
+    }
+
     return await this.gameModel.findByIdAndDelete(id);
   }
 }

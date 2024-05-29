@@ -5,12 +5,13 @@ import mongoose from 'mongoose';
   timestamps: true,
 })
 export class Review {
-  @Prop({ unique: true })
+  @Prop()
   comment: string;
   @Prop()
   rating: number;
   @Prop()
   date: string;
+
   user: { type: mongoose.Schema.Types.ObjectId; ref: 'User' };
 }
 

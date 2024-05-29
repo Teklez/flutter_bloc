@@ -9,11 +9,12 @@ class ReviewService {
     print("Fetching reviews for gameId: $gameId");
     try {
       final response = await http.get(Uri.parse('$baseUrl/game/$gameId'));
+      print("=================>${response.body}");
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
         List<Review> reviews =
             body.map((item) => Review.fromJson(item)).toList();
-
+        print('====================>fetched reviews ${reviews}');
         return reviews;
       } else {
         print("Error: ${response.statusCode}");
@@ -50,8 +51,10 @@ class ReviewService {
   }
 
   Future<Review> updateReview(String id, Review review) async {
+    print(
+        "==================================================================>Updating review with id: $id");
     final response = await http.put(
-      Uri.parse(baseUrl + 'reviews/' + id),
+      Uri.parse('$baseUrl/update/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -64,8 +67,19 @@ class ReviewService {
     }
   }
 
-  Future<void> deleteReview(String id) async {
-    final response = await http.delete(Uri.parse(baseUrl + 'reviews/' + id));
+  Future<void> deleteReview(String id, String gameId) async {
+    print(
+        "========================================================================>Deleting review with id: $id associated with the game with id: $gameId");
+    final response = await http.delete(
+      Uri.parse('$baseUrl/delete/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'gameId': gameId,
+      }),
+    );
+
     if (response.statusCode != 204) {
       throw "Failed to delete review";
     }

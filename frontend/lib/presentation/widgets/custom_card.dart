@@ -11,6 +11,7 @@ class GameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      // color: Colors.black12,
       clipBehavior: Clip.antiAlias,
       elevation: 0.0,
       child: Column(
@@ -233,11 +234,8 @@ class GameDetail extends StatelessWidget {
                       const Text("See review"),
                       IconButton(
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            "/review",
-                            arguments: {'gameId': game.id},
-                          );
+                          Navigator.pushNamed(context, '/review',
+                              arguments: {'gameId': game.id});
                         },
                         icon: const Icon(Icons.arrow_forward),
                       ),

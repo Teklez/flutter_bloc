@@ -99,7 +99,6 @@ class _RatingFormState extends State<RatingForm> {
                       String review = reviewController.text;
 
                       final curReview = Review(
-                        username: 'user',
                         comment: review,
                         rating: ratingValue,
                         date: DateTime.now().toString(),
@@ -108,7 +107,6 @@ class _RatingFormState extends State<RatingForm> {
                       BlocProvider.of<ReviewBloc>(context).add(
                         AddReview(curReview, gameId),
                       );
-
                       Navigator.pop(context);
                     }
                   },

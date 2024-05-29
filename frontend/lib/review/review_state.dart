@@ -44,3 +44,21 @@ class ReviewLoadSuccess extends ReviewState {
   @override
   List<Object?> get props => [review];
 }
+
+class ReviewIsEmpty extends ReviewState {
+  final String message;
+
+  ReviewIsEmpty(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class ReviewUpdateSuccess extends ReviewState {
+  final String message;
+
+  ReviewUpdateSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

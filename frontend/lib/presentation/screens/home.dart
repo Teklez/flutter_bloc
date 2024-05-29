@@ -4,7 +4,6 @@ import 'package:frontend/game/game_bloc.dart';
 import 'package:frontend/game/game_events.dart';
 import 'package:frontend/game/game_states.dart';
 import 'package:frontend/presentation/widgets/custom_card.dart';
-import 'package:frontend/presentation/widgets/dialogues.dart';
 import 'package:frontend/presentation/widgets/drawer.dart';
 
 class HomePage extends StatelessWidget {
@@ -18,7 +17,7 @@ class HomePage extends StatelessWidget {
     });
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(41, 37, 37, 1),
+        backgroundColor: const Color.fromRGBO(41, 37, 37, 1),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
@@ -29,7 +28,6 @@ class HomePage extends StatelessWidget {
               Navigator.pushNamed(context, '/search');
             },
           ),
-          const Filter(),
         ],
         title: const Text(
           "BetEbet",
@@ -59,9 +57,9 @@ class HomePage extends StatelessWidget {
               }).toList(),
             );
           } else if (state is GameError) {
-            return Center(child: Text("Error loading games"));
+            return const Center(child: Text("Error loading games"));
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),

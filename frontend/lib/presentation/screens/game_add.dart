@@ -46,7 +46,6 @@ class _AddGameFormState extends State<AddGameForm> {
 
   @override
   Widget build(BuildContext context) {
-    final GameBloc gameBloc = BlocProvider.of<GameBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.buttonName == 'Add' ? 'Add Game' : 'Edit Game'),
@@ -135,7 +134,7 @@ class _AddGameFormState extends State<AddGameForm> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          _saveGame(context, gameBloc);
+                          _saveGame(context);
                         }
                       },
                       child: Text(
@@ -154,7 +153,7 @@ class _AddGameFormState extends State<AddGameForm> {
     );
   }
 
-  void _saveGame(BuildContext context, GameBloc gameBloc) {
+  void _saveGame(BuildContext context) {
     final game = Game(
       id: widget.initialGame?.id ?? '',
       name: _nameController.text.trim(),
@@ -166,14 +165,10 @@ class _AddGameFormState extends State<AddGameForm> {
 
     if (widget.buttonName == 'Add') {
       // Add new game
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        gameBloc.add(AddGame(game));
-      });
+      BlocProvider.of<GameBloc>(context).add(AddGame(game));
     } else {
       // Edit existing game
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        gameBloc.add(EditGame(game));
-      });
+      BlocProvider.of<GameBloc>(context).add(EditGame(game));
     }
 
     Navigator.pushNamed(context, '/admin');

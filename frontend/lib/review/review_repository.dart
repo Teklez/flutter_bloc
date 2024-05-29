@@ -21,7 +21,7 @@ class ReviewRepository {
     return reviewService.updateReview(id, review);
   }
 
-  Future<void> deleteReview(String id) async {
-    return reviewService.deleteReview(id);
+  Future<void> deleteReview(String id, String gameId) async {
+    return reviewService.deleteReview(id, gameId);
   }
 }

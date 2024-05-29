@@ -5,6 +5,9 @@ import 'package:frontend/auth/auth_event.dart';
 import 'package:frontend/game/game_bloc.dart';
 import 'package:frontend/game/game_events.dart';
 import 'package:frontend/presentation/screens/game_add.dart';
+import 'package:frontend/presentation/screens/review_edit.dart';
+import 'package:frontend/review/review_bloc.dart';
+import 'package:frontend/review/review_event.dart';
 import 'package:frontend/users/users_bloc.dart';
 import 'package:frontend/users/users_event.dart';
 
@@ -12,9 +15,9 @@ import 'package:frontend/users/users_event.dart';
 // This dialogue is used to edit or delete a game. It is used in the AdminGameCard widget.
 
 class EditDeleteDialogue extends StatelessWidget {
-  final route;
+  final String route;
   final data;
-  final feature;
+  final String feature;
   const EditDeleteDialogue(
       {super.key,
       required this.route,
@@ -46,6 +49,13 @@ class EditDeleteDialogue extends StatelessWidget {
                       AddGameForm(buttonName: 'Edit', initialGame: data),
                 ),
               );
+            } else if (feature == 'review') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReviewEdit(review: data),
+                ),
+              );
             }
 
             // the same for review feature
@@ -61,13 +71,23 @@ class EditDeleteDialogue extends StatelessWidget {
             ],
           ),
           onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => AreYouSureDialogue(
-                data: data,
-                feature: 'game',
-              ),
-            );
+            if (feature == "game") {
+              showDialog(
+                context: context,
+                builder: (context) => AreYouSureDialogue(
+                  data: data,
+                  feature: 'game',
+                ),
+              );
+            } else if (feature == "review") {
+              showDialog(
+                context: context,
+                builder: (context) => AreYouSureDialogue(
+                  data: data,
+                  feature: 'review',
+                ),
+              );
+            }
           }, // menu setting
         ),
       ],
@@ -140,8 +160,6 @@ class AreYouSureDialogue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GameBloc gameBloc = BlocProvider.of<GameBloc>(context);
-    UsersBloc usersBloc = BlocProvider.of<UsersBloc>(context);
     return AlertDialog(
       title: const Text("Are you sure?"),
       actions: [
@@ -154,18 +172,14 @@ class AreYouSureDialogue extends StatelessWidget {
         TextButton(
           onPressed: () {
             if (feature == 'game') {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                gameBloc.add(DeleteGame(data.id));
-              });
+              BlocProvider.of<GameBloc>(context).add(DeleteGame(data.id));
             } else if (feature == 'userstatus') {
               if (data.status == 'unblocked') {
                 data.status = 'blocked';
               } else {
                 data.status = 'unblocked';
               }
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                usersBloc.add(ChangeStatus(data));
-              });
+              BlocProvider.of<UsersBloc>(context).add(ChangeStatus(data));
 
               // add the logic to block user
             } else if (feature == 'userrole') {
@@ -174,13 +188,14 @@ class AreYouSureDialogue extends StatelessWidget {
               } else {
                 data.roles = 'user';
               }
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                usersBloc.add(ChangeStatus(data));
-              });
+              BlocProvider.of<UsersBloc>(context).add(ChangeStatus(data));
               // add the logic to change user role
             } else if (feature == 'logout') {
               BlocProvider.of<AuthBloc>(context)
                   .add(UserLoggedOut(message: data));
+            } else if (feature == 'review') {
+              BlocProvider.of<ReviewBloc>(context)
+                  .add(DeleteReview(data['data'].id, data['gameId']));
             }
 
             // the same for review feature
@@ -198,25 +213,4 @@ class AreYouSureDialogue extends StatelessWidget {
 }
 
 // FILTER DIALOGUE
-class Filter extends StatelessWidget {
-  const Filter({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-      child: Icon(Icons.tune),
-      itemBuilder: (context) => [
-        const PopupMenuItem(
-          value: "All",
-          child: Text("All"),
-        ),
-        const PopupMenuItem(
-          child: Text("4.5"),
-        ),
-        const PopupMenuItem(
-          child: Text("4.8"),
-        ),
-      ],
-    );
-  }
-}

@@ -26,7 +26,7 @@ class AddReview extends ReviewEvent {
 }
 
 class EditReview extends ReviewEvent {
-  final dynamic review;
+  final Review review;
 
   const EditReview(this.review);
 
@@ -35,9 +35,9 @@ class EditReview extends ReviewEvent {
 }
 
 class DeleteReview extends ReviewEvent {
+  final String gameId;
   final String reviewId;
-
-  const DeleteReview(this.reviewId);
+  const DeleteReview(this.reviewId, this.gameId);
 
   @override
   List<Object?> get props => [reviewId];
