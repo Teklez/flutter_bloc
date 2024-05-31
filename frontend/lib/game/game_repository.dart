@@ -10,10 +10,7 @@ class GameRepository {
     try {
       return await gameService.fetchGames();
     } catch (e) {
-      // Print detailed error information
-      print('Error fetching games: $e');
-      // Optionally rethrow the error to propagate it upwards
-      rethrow;
+      throw Exception('Error fetching games: $e');
     }
   }
 
@@ -21,10 +18,7 @@ class GameRepository {
     try {
       await gameService.addGame(game);
     } catch (e) {
-      // Print detailed error information
-      print('Error adding game: $e');
-      // Optionally rethrow the error to propagate it upwards
-      rethrow;
+      throw Exception('Error adding game: $e');
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/game/game_events.dart';
 import 'package:frontend/game/game_model.dart';
+import 'package:frontend/game/game_states.dart';
 import '../../game/game_bloc.dart';
 
 class AddGameForm extends StatefulWidget {
@@ -171,6 +172,11 @@ class _AddGameFormState extends State<AddGameForm> {
       BlocProvider.of<GameBloc>(context).add(EditGame(game));
     }
 
-    Navigator.pushNamed(context, '/admin');
+    final gameBloc = BlocProvider.of<GameBloc>(context);
+    gameBloc.stream.listen((state) {
+      if (state is GameAdded || state is GameEdited) {
+        Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
+      }
+    });
   }
 }

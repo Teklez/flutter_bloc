@@ -107,7 +107,9 @@ class _RatingFormState extends State<RatingForm> {
                       BlocProvider.of<ReviewBloc>(context).add(
                         AddReview(curReview, gameId),
                       );
-                      Navigator.pop(context);
+
+                      Navigator.pushReplacementNamed(context, '/review',
+                          arguments: {'gameId': gameId});
                     }
                   },
                   child: Text(

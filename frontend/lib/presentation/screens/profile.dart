@@ -66,6 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
         username: username == '' ? user : username,
         oldPassword: oldPassword,
         newPassword: newPassword));
+    BlocProvider.of<AuthBloc>(context).add(CurrentUser());
   }
 
   String _deleteAccount(String id) {
@@ -80,21 +81,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<AuthBloc>(context).add(CurrentUser());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          String username = 'username';
-          String id = '';
-          if (state is AuthSuccess) {
-            if (state.message != null) {
-              final message = state.message;
-              username = message['username'];
-              id = message['sub'];
-            }
+      body: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+        print(
+            "================================================================================>state: $state");
+        String username = 'username';
+        String id = '';
+        if (state is AuthSuccess) {
+          if (state.message != null) {
+            final message = state.message;
+            username = message['username'];
+            id = message['sub'];
           }
 
           return SingleChildScrollView(
@@ -163,10 +163,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ElevatedButton(
                     onPressed: () {
                       _saveProfile(id, username);
-
-                      if (state is AuthSuccess) {
-                        Navigator.popAndPushNamed(context, '/profile');
-                      }
+                      Navigator.pushNamed(context, '/profile');
                     },
                     child: const Text('Save'),
                   ),
@@ -184,8 +181,10 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           );
-        },
-      ),
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      }),
     );
   }
 }

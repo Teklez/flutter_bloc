@@ -17,6 +17,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }
 
   void _handleFetchGames(FetchGames event, Emitter<GameState> emit) async {
+    print("============================================> fetching games");
     try {
       final List<Game> games = await gameRepository.fetchGames();
       // print("Games: $games ");
@@ -27,8 +28,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         emit(GameLoadSuccess(games));
       }
     } catch (e) {
-      print(e.toString());
-      emit(GameError());
+      throw Exception('Error fetching games: $e');
     }
   }
 
@@ -37,6 +37,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       await gameRepository.addGame(event.game);
       final List<Game> games = await gameRepository.fetchGames();
       emit(GameLoadSuccess(games));
+      emit(GameAdded());
     } catch (e) {
       emit(GameError());
     }
@@ -47,6 +48,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       await gameRepository.editGame(event.game);
       final List<Game> games = await gameRepository.fetchGames();
       emit(GameLoadSuccess(games));
+      emit(GameEdited());
     } catch (e) {
       emit(GameError());
     }

@@ -27,9 +27,7 @@ class GameService {
       },
       body: jsonEncode(game.toJson()),
     );
-    if (response.statusCode != 200) {
-      print(response.body);
-
+    if (response.statusCode != 201) {
       throw Exception('Failed to add game');
     }
   }
@@ -48,7 +46,8 @@ class GameService {
   }
 
   Future<void> deleteGame(String gameId) async {
-    final response = await http.delete(Uri.parse('$baseUrl/games/delete/$gameId'));
+    final response =
+        await http.delete(Uri.parse('$baseUrl/games/delete/$gameId'));
     if (response.statusCode != 200) {
       throw Exception('Failed to delete game');
     }

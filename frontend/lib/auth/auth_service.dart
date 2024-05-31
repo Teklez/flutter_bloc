@@ -87,7 +87,7 @@ class AuthService {
 
   // update user
 
-  Future<String> update(String id, String username, String newPassword,
+  Future update(String id, String username, String newPassword,
       String oldPassword) async {
     try {
       final response = await http.put(
@@ -105,7 +105,7 @@ class AuthService {
         final access_token = response.body;
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', access_token);
-        return access_token;
+        return getCurrentUserFromStoredToken();
       } else {
         throw Exception('Failed to update: ${response.statusCode}');
       }

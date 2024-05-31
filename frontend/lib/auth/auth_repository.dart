@@ -17,9 +17,15 @@ class AuthRepository {
     return await authService.register(username, password);
   }
 
-  Future<String> update(String id, String username, String newPassword,
+  Future update(String id, String username, String newPassword,
       String oldPassword) async {
-    return await authService.update(id, username, newPassword, oldPassword);
+    try {
+      return await authService.update(id, username, newPassword, oldPassword);
+    } catch (e) {
+      print(
+          'Error updating user============================================> from repository: $e');
+      rethrow;
+    }
   }
 
   Future<void> delete(String id) async {

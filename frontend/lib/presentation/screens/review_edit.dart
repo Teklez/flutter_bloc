@@ -80,21 +80,8 @@ class _ReviewEditState extends State<ReviewEdit> {
                       children: [
                         Row(
                           children: [
-                            const CircleAvatar(
-                              radius: 20,
-                              backgroundImage:
-                                  AssetImage("assets/profile2.jpg"),
-                            ),
                             const SizedBox(
                               width: 15,
-                            ),
-                            Text(
-                              "Hanna A.",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[350],
-                              ),
                             ),
                           ],
                         ),

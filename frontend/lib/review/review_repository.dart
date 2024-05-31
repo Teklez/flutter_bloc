@@ -6,22 +6,22 @@ class ReviewRepository {
   ReviewRepository(this.reviewService);
 
   Future<List<Review>> getReviews(gameId) async {
-    return reviewService.getReviews(gameId);
+    return await reviewService.getReviews(gameId);
   }
 
   Future<Review> getReview(String id) async {
-    return reviewService.getReview(id);
+    return await reviewService.getReview(id);
   }
 
   Future<Review> createReview(Review review, gameId) async {
-    return reviewService.createReview(review, gameId);
+    return await reviewService.createReview(review, gameId);
   }
 
   Future<Review> updateReview(String id, Review review) async {
-    return reviewService.updateReview(id, review);
+    return await reviewService.updateReview(id, review);
   }
 
   Future<void> deleteReview(String id, String gameId) async {
-    return reviewService.deleteReview(id, gameId);
+    return await reviewService.deleteReview(id, gameId);
   }
 }

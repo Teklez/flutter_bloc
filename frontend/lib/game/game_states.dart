@@ -22,3 +22,7 @@ class GameLoadSuccess extends GameState {
 class GameError extends GameState {}
 
 class GameEmpty extends GameState {}
+
+class GameAdded extends GameState {}
+
+class GameEdited extends GameState {}

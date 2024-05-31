@@ -47,7 +47,6 @@ class AdminPage extends StatelessWidget {
       body: BlocBuilder<GameBloc, GameState>(
         builder: (context, state) {
           if (state is GameEmpty) {
-            print("No games found");
             return const Center(child: Text("No games found"));
           } else if (state is GameLoadSuccess) {
             return GridView.count(
@@ -61,7 +60,7 @@ class AdminPage extends StatelessWidget {
               }).toList(),
             );
           } else if (state is GameError) {
-            return Center(child: Text("Error loading games"));
+            return const Center(child: Icon(Icons.error));
           } else {
             return Center(child: CircularProgressIndicator());
           }

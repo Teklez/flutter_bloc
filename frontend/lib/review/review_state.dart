@@ -62,3 +62,7 @@ class ReviewUpdateSuccess extends ReviewState {
   @override
   List<Object?> get props => [message];
 }
+
+class ReviewAdded extends ReviewState {}
+
+class ReveiwEdited extends ReviewState {}

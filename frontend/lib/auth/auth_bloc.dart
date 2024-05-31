@@ -112,8 +112,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           event.id, event.username, event.newPassword, event.oldPassword);
 
       if (data != null) {
-        emit(const UpdateSuccess(message: "Profile updated"));
+        emit(AuthSuccess(message: data));
       } else {
+        print(
+            "==========================================================================>  bloc");
+
         emit(const AuthFailure(message: 'update failed'));
       }
     } catch (e) {
