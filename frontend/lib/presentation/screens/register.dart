@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/application/auth/auth_bloc.dart';
 import 'package:frontend/presentation/events/auth_event.dart';
 import 'package:frontend/presentation/states/auth_state.dart';
-import 'package:frontend/presentation/screens/home.dart';
-import 'package:frontend/presentation/screens/login.dart';
+import 'package:go_router/go_router.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -176,13 +175,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       ),
                                     );
                                     if (state is AuthSuccess) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomePage(),
-                                        ),
-                                      );
+                                      context.go('/home');
                                     }
                                   }
                                 },
@@ -206,12 +199,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               const Text("Already have an account? "),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const LoginPage(),
-                                    ),
-                                  );
+                                  context.go('/login');
                                 },
                                 child: const Text(
                                   "Login",

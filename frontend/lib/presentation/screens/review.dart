@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/presentation/widgets/drawer.dart';
 import 'package:frontend/presentation/widgets/rating.dart';
 import 'package:frontend/presentation/widgets/rating_Progress_Indicator.dart';
 import 'package:frontend/presentation/widgets/user_review_card.dart'; // Assuming this is where UserReview widget is defined
@@ -7,35 +8,31 @@ import 'package:frontend/application/review/review_bloc.dart';
 import 'package:frontend/presentation/events/review_event.dart';
 import 'package:frontend/domain/review_model.dart';
 import 'package:frontend/presentation/states/review_state.dart';
+import 'package:go_router/go_router.dart';
 
-class ReviewPage extends StatefulWidget {
-  const ReviewPage({Key? key}) : super(key: key);
-
-  @override
-  _ReviewPageState createState() => _ReviewPageState();
-}
-
-class _ReviewPageState extends State<ReviewPage> {
-  late String gameId;
+class ReviewPage extends StatelessWidget {
+  final String gameId;
+  const ReviewPage({Key? key, required this.gameId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic>? arguments =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    gameId = arguments?['gameId'];
-    BlocProvider.of<ReviewBloc>(context).add(FetchReviews(gameId));
+    final gameId = this.gameId;
+    final ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      reviewBloc.add(FetchReviews(gameId));
+    });
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
-        ),
+        backgroundColor: Color.fromARGB(255, 211, 47, 47),
+      ),
+      drawer: const MenuDrawer(
+        menuItems: [
+          ["Home", "/home"],
+          ["Profile", "/profile"],
+          ["About", "/about"],
+          ["Logout", "/login"]
+        ],
       ),
       backgroundColor: Colors.black,
       body: BlocBuilder<ReviewBloc, ReviewState>(
@@ -44,7 +41,7 @@ class _ReviewPageState extends State<ReviewPage> {
           List<int> ratingCount = [0, 0, 0, 0, 0];
           var totalRating = 0.0;
           var totalReviews = 0;
-
+          print("state is -------------------------------------------->$state");
           if (state is ReviewsLoadSuccess) {
             reviews = state.reviews;
             totalReviews = reviews.length;
@@ -159,11 +156,9 @@ class _ReviewPageState extends State<ReviewPage> {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                "/review-page",
-                                arguments: {'gameId': gameId},
-                              );
+                              context.push('/review-page', extra: {
+                                'gameId': gameId,
+                              });
                             },
                             child: Container(
                               padding: const EdgeInsets.all(8.0),
@@ -233,6 +228,8 @@ class _ReviewPageState extends State<ReviewPage> {
               ),
             );
           } else {
+            print(
+                'the state is++++++++++++++++++++++++++++++++++++++++++++> $state');
             return const Center(
               child: CircularProgressIndicator(),
             );

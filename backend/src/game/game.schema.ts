@@ -17,6 +17,8 @@ export class Game extends Document {
 
   @Prop()
   releaseDate: string;
+  @Prop()
+  rating: number = 0;
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }])
   reviews: mongoose.Types.ObjectId[];

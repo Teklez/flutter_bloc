@@ -4,7 +4,6 @@ import 'package:frontend/application/auth/auth_bloc.dart';
 import 'package:frontend/infrastructure/auth/auth_repository.dart';
 import 'package:frontend/infrastructure/auth/auth_service.dart';
 import 'package:frontend/application/game/game_bloc.dart';
-import 'package:frontend/domain/game_model.dart';
 import 'package:frontend/infrastructure/game/game_repository.dart';
 import 'package:frontend/infrastructure/game/game_service.dart';
 import 'package:frontend/presentation/screens/about.dart';
@@ -26,6 +25,7 @@ import 'package:frontend/infrastructure/review/review_service.dart';
 import 'package:frontend/application/user/users_bloc.dart';
 import 'package:frontend/infrastructure/user/users_repository.dart';
 import 'package:frontend/infrastructure/user/users_service.dart';
+import 'package:go_router/go_router.dart';
 
 import '../screens/profile.dart';
 
@@ -43,13 +43,96 @@ class BetApp extends StatelessWidget {
     final userRepository = UsersRepository(userService: userService);
 
     // Initialize AuthRepository
-
     final authService = AuthService();
     final authRepository = AuthRepository(authService: authService);
 
     // Initialize the ReviewRepository
     final reviewService = ReviewService();
     final reviewRepository = ReviewRepository(reviewService);
+
+    final router = GoRouter(
+      initialLocation: '/onboarding',
+      routes: [
+        GoRoute(
+          path: '/onboarding',
+          builder: (context, state) => OnboardingScreen(),
+        ),
+        GoRoute(
+          path: '/login',
+          builder: (context, state) => const LoginPage(),
+        ),
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
+          path: '/register',
+          builder: (context, state) => const RegistrationPage(),
+        ),
+        GoRoute(
+          path: '/review',
+          builder: (context, state) {
+            final Map<String, dynamic> args =
+                state.extra as Map<String, dynamic>;
+            final String gameId = args['gameId'];
+
+            return ReviewPage(gameId: gameId);
+          },
+        ),
+        GoRoute(
+          path: '/admin',
+          builder: (context, state) => const AdminPage(),
+        ),
+        GoRoute(
+          path: '/add_game',
+          builder: (context, state) => const AddGameForm(buttonName: "Add"),
+        ),
+        GoRoute(
+          path: '/about',
+          builder: (context, state) => AboutPage(),
+        ),
+        GoRoute(
+          path: '/users',
+          builder: (context, state) => const UsersPage(),
+        ),
+        GoRoute(
+          path: '/home',
+          builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
+          path: '/search',
+          builder: (context, state) => const SearchPage(),
+        ),
+        GoRoute(
+          path: '/review-edit',
+          builder: (context, state) => ReviewEdit(),
+        ),
+        GoRoute(
+          path: '/review-page',
+          builder: (context, state) {
+            final Map<String, dynamic> args =
+                state.extra as Map<String, dynamic>;
+            final String gameId = args['gameId'];
+
+            return RatingForm(gameId: gameId);
+          },
+        ),
+        GoRoute(
+          path: '/game-detail',
+          builder: (context, state) {
+            final Map<String, dynamic> args =
+                state.extra as Map<String, dynamic>;
+            final game = args['game'];
+
+            return GameDetailPage(game: game);
+          },
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => const ProfilePage(),
+        ),
+      ],
+    );
 
     return MultiBlocProvider(
       providers: [
@@ -66,31 +149,16 @@ class BetApp extends StatelessWidget {
           create: (context) => ReviewBloc(reviewRepository),
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'BetEbet',
-        initialRoute: '/onboarding',
-        routes: {
-          '/onboarding': (BuildContext context) => OnboardingScreen(),
-          '/login': (BuildContext context) => const LoginPage(),
-          '/': (BuildContext context) => const HomePage(),
-          '/register': (BuildContext context) => const RegistrationPage(),
-          '/review': (BuildContext context) => const ReviewPage(),
-          '/admin': (BuildContext context) => const AdminPage(),
-          '/add_game': (BuildContext context) =>
-              const AddGameForm(buttonName: "Add"),
-          '/about': (BuildContext context) => AboutPage(),
-          '/users': (BuildContext context) => const UsersPage(),
-          '/home': (BuildContext context) => const HomePage(),
-          '/search': (BuildContext context) => const SearchPage(),
-          '/review-edit': (BuildContext context) => ReviewEdit(),
-          '/review-page': (BuildContext context) => RatingForm(),
-          '/game_details': (BuildContext context) => GameDetailPage(
-              game: Game(image: "assets/game1.jpg", name: "Game 1")),
-          '/profile': (BuildContext context) => const ProfilePage(),
-        },
+        routerConfig: router,
         theme: ThemeData.dark(),
       ),
     );
   }
+}
+
+void main() {
+  runApp(const BetApp());
 }

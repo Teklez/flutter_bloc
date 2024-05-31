@@ -20,10 +20,11 @@ class GameService {
         Iterable list = json.decode(response.body);
         return list.map((model) => Game.fromJson(model)).toList();
       } else {
-        throw Exception('Failed to load games: ${response.statusCode}');
+        throw Exception(
+            'Failed to load games from service: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Failed to load games: $e');
+      throw Exception('Failed to load games from : $e');
     }
   }
 

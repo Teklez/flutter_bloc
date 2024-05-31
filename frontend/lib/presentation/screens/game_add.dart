@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/events/game_events.dart';
+import 'package:frontend/application/game/game_bloc.dart';
 import 'package:frontend/domain/game_model.dart';
+import 'package:frontend/presentation/events/game_events.dart';
 import 'package:frontend/presentation/states/game_states.dart';
-import '../../application/game/game_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class AddGameForm extends StatefulWidget {
   final String buttonName;
@@ -120,7 +121,7 @@ class _AddGameFormState extends State<AddGameForm> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/admin');
+                        context.push('/admin');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey[300],
@@ -154,6 +155,29 @@ class _AddGameFormState extends State<AddGameForm> {
     );
   }
 
+  String formatCurrentDate() {
+    DateTime now = DateTime.now();
+    List<String> months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    String month = months[now.month - 1];
+    String day = now.day.toString();
+    String year = now.year.toString();
+
+    return "$month $day, $year";
+  }
+
   void _saveGame(BuildContext context) {
     final game = Game(
       id: widget.initialGame?.id ?? '',
@@ -161,22 +185,27 @@ class _AddGameFormState extends State<AddGameForm> {
       description: _descriptionController.text.trim(),
       image: _imageUrlController.text.trim(),
       publisher: _publisherController.text.trim(),
-      releaseDate: DateTime.now().toString(),
+      releaseDate: formatCurrentDate(),
     );
+
+    final gameBloc = BlocProvider.of<GameBloc>(context);
 
     if (widget.buttonName == 'Add') {
       // Add new game
-      BlocProvider.of<GameBloc>(context).add(AddGame(game));
+      gameBloc.add(AddGame(game));
     } else {
       // Edit existing game
-      BlocProvider.of<GameBloc>(context).add(EditGame(game));
+      gameBloc.add(EditGame(game));
     }
 
-    final gameBloc = BlocProvider.of<GameBloc>(context);
+    // Listen for state changes
     gameBloc.stream.listen((state) {
       if (state is GameAdded || state is GameEdited) {
-        Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
+        // Navigate to /admin after game is added or edited
+        context.push('/admin');
       }
     });
+
+    // Dispose subscription to avoid memory leaks
   }
 }

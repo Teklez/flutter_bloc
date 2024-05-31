@@ -1,6 +1,6 @@
 export class ReviewDto {
   rating: number;
   comment: string;
-  user: string = '';
+  username: string = '';
   date: string;
 }

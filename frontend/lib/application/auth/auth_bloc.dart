@@ -19,33 +19,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   // Event handlers
   // CurrentUser event handler
-
   void _handleCurrentUser(CurrentUser event, Emitter<AuthState> emit) async {
     try {
       final user = await authRepository.getCurrentUser();
-      emit(AuthSuccess(message: user));
+      emit(AuthSuccess(message: user)); // Emit username instead of user
     } catch (e) {
       emit(const AuthFailure(message: 'Not authenticated'));
     }
   }
 
   // AppStarted event handler
-
   void _handleAppStarted(AppStarted event, Emitter<AuthState> emit) async {
     try {
       final user = await authRepository.getCurrentUser();
-      // if (user != null) {
-      emit(AuthSuccess(message: user));
-      // } else {
-      //   emit(const AuthFailure(message: 'Not authenticated'));
-      // }
+      emit(AuthSuccess(message: user)); // Emit username instead of user
     } catch (e) {
       emit(const AuthFailure(message: 'Not authenticated'));
     }
   }
 
   // UserLoggedIn event handler
-
   void _handleUserLoggedIn(UserLoggedIn event, Emitter<AuthState> emit) async {
     try {
       final token = await authRepository.login(event.username, event.password);
@@ -63,8 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-// UserLoggedOut event handler
-
+  // UserLoggedOut event handler
   void _handleUserLoggedOut(
       UserLoggedOut event, Emitter<AuthState> emit) async {
     try {
@@ -75,8 +67,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-// UserRegistered event handler
-
+  // UserRegistered event handler
   void _handleUserRegistered(
       UserRegistered event, Emitter<AuthState> emit) async {
     try {
@@ -96,16 +87,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-// UserDeleted event handler
-
+  // UserDeleted event handler
   void _handleUserDeleted(UserDeleted event, Emitter<AuthState> emit) async {
     try {
       await authRepository.delete(event.id);
+      
     } catch (e) {
       emit(const AuthFailure(message: "Failed to delete user"));
     }
   }
 
+  // UserUpdated event handler
   void _handleUserUpdated(UserUpdated event, Emitter<AuthState> emit) async {
     try {
       final data = await authRepository.update(
@@ -114,13 +106,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (data != null) {
         emit(AuthSuccess(message: data));
       } else {
-        print(
-            "==========================================================================>  bloc");
-
         emit(const AuthFailure(message: 'update failed'));
       }
     } catch (e) {
-      emit(const AuthFailure(message: ''));
+      emit(const AuthFailure(message: 'update failed'));
     }
   }
 }

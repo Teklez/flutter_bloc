@@ -24,11 +24,11 @@ class ReviewService {
         return reviews;
       } else {
         print("Error: ${response.statusCode}");
-        throw "Failed to load reviews";
+        throw "Failed to load reviews from service =====================>";
       }
     } catch (e) {
-      print("Error fetching reviews: $e");
-      throw "Failed to load reviews";
+      print("Error fetching reviews from service ==================>: $e");
+      throw "Failed to load reviews from service";
     }
   }
 
@@ -48,8 +48,9 @@ class ReviewService {
     }
   }
 
-  Future<Review> createReview(Review review, gameId) async {
+  Future<Review> createReview(Review review, gameId, username) async {
     final accessToken = await UserPreferences.getAccessToken();
+    review.username = username;
     final response = await http.post(
       Uri.parse('$baseUrl/game/$gameId'),
       headers: <String, String>{
@@ -83,19 +84,22 @@ class ReviewService {
   }
 
   Future<void> deleteReview(String id, String gameId) async {
-    final accessToken = await UserPreferences.getAccessToken();
-    final response = await http.delete(
-      Uri.parse('$baseUrl/delete/$id'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $accessToken'
-      },
-      body: jsonEncode(<String, String>{
-        'gameId': gameId,
-      }),
-    );
+    try {
+      final accessToken = await UserPreferences.getAccessToken();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/delete/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken'
+        },
+        body: jsonEncode(<String, String>{'gameId': gameId}),
+      );
 
-    if (response.statusCode != 204) {
+      if (response.statusCode != 200) {
+        throw "Failed to delete review from service";
+      }
+    } catch (e) {
+      print("Error deleting review: $e");
       throw "Failed to delete review";
     }
   }

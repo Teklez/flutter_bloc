@@ -5,6 +5,7 @@ import 'package:frontend/presentation/widgets/rating.dart';
 import 'package:frontend/application/review/review_bloc.dart';
 import 'package:frontend/presentation/events/review_event.dart';
 import 'package:frontend/domain/review_model.dart';
+import 'package:go_router/go_router.dart';
 
 class ReviewEdit extends StatefulWidget {
   final review;
@@ -40,16 +41,19 @@ class _ReviewEditState extends State<ReviewEdit> {
       // Update review
       BlocProvider.of<ReviewBloc>(context).add(
         EditReview(
-          Review(
-            id: widget.review!['data'].id,
-            comment: _reviewController.text,
-            rating: _rating,
-            date: widget.review!['data'].date,
-          ),
-        ),
+            Review(
+              username: "anonymous",
+              id: widget.review!['data'].id,
+              comment: _reviewController.text,
+              rating: _rating,
+              date: widget.review!['data'].date,
+            ),
+            widget.review['gameId']),
       );
 
-      Navigator.pop(context);
+      context.pop();
+      context.pushReplacement('/review',
+          extra: {'gameId': widget.review['gameId']});
     }
   }
 
@@ -63,7 +67,9 @@ class _ReviewEditState extends State<ReviewEdit> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              context.push('/review', extra: {
+                'gameId': widget.review['gameId'],
+              });
             },
           ),
         ),
@@ -75,12 +81,12 @@ class _ReviewEditState extends State<ReviewEdit> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
-                            const SizedBox(
+                            SizedBox(
                               width: 15,
                             ),
                           ],

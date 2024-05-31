@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/application/auth/auth_bloc.dart';
-import 'package:frontend/presentation/events/auth_event.dart';
 import 'package:frontend/application/game/game_bloc.dart';
+import 'package:frontend/application/review/review_bloc.dart';
+import 'package:frontend/application/user/users_bloc.dart';
+import 'package:frontend/presentation/events/auth_event.dart';
 import 'package:frontend/presentation/events/game_events.dart';
+import 'package:frontend/presentation/events/review_event.dart';
+import 'package:frontend/presentation/events/users_event.dart';
 import 'package:frontend/presentation/screens/game_add.dart';
 import 'package:frontend/presentation/screens/review_edit.dart';
-import 'package:frontend/application/review/review_bloc.dart';
-import 'package:frontend/presentation/events/review_event.dart';
-import 'package:frontend/application/user/users_bloc.dart';
-import 'package:frontend/presentation/events/users_event.dart';
+
+import 'package:go_router/go_router.dart';
 
 // EDIT DELETE DIALOGUE
 // This dialogue is used to edit or delete a game. It is used in the AdminGameCard widget.
@@ -39,7 +41,7 @@ class EditDeleteDialogue extends StatelessWidget {
             ],
           ),
           onTap: () {
-            print("pushd to the page");
+            print("pushed to the page");
 
             if (feature == 'game') {
               Navigator.push(
@@ -57,9 +59,7 @@ class EditDeleteDialogue extends StatelessWidget {
                 ),
               );
             }
-
-            // the same for review feature
-          }, // menu setting
+          },
         ),
         PopupMenuItem(
           value: 2,
@@ -71,24 +71,26 @@ class EditDeleteDialogue extends StatelessWidget {
             ],
           ),
           onTap: () {
-            if (feature == "game") {
-              showDialog(
-                context: context,
-                builder: (context) => AreYouSureDialogue(
-                  data: data,
-                  feature: 'game',
-                ),
-              );
-            } else if (feature == "review") {
-              showDialog(
-                context: context,
-                builder: (context) => AreYouSureDialogue(
-                  data: data,
-                  feature: 'review',
-                ),
-              );
-            }
-          }, // menu setting
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (feature == "game") {
+                showDialog(
+                  context: context,
+                  builder: (context) => AreYouSureDialogue(
+                    data: data,
+                    feature: 'game',
+                  ),
+                );
+              } else if (feature == "review") {
+                showDialog(
+                  context: context,
+                  builder: (context) => AreYouSureDialogue(
+                    data: data,
+                    feature: 'review',
+                  ),
+                );
+              }
+            });
+          },
         ),
       ],
     );
@@ -119,12 +121,14 @@ class BlockRole extends StatelessWidget {
             ],
           ),
           onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AreYouSureDialogue(data: user, feature: 'userstatus');
-              },
-            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AreYouSureDialogue(data: user, feature: 'userstatus');
+                },
+              );
+            });
           },
         ),
         PopupMenuItem(
@@ -137,11 +141,13 @@ class BlockRole extends StatelessWidget {
             ],
           ),
           onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) =>
-                  AreYouSureDialogue(data: user, feature: 'userrole'),
-            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showDialog(
+                context: context,
+                builder: (context) =>
+                    AreYouSureDialogue(data: user, feature: 'userrole'),
+              );
+            });
           },
         ),
       ],
@@ -180,8 +186,6 @@ class AreYouSureDialogue extends StatelessWidget {
                 data.status = 'unblocked';
               }
               BlocProvider.of<UsersBloc>(context).add(ChangeStatus(data));
-
-              // add the logic to block user
             } else if (feature == 'userrole') {
               if (data.roles == 'user') {
                 data.roles = 'admin';
@@ -189,25 +193,24 @@ class AreYouSureDialogue extends StatelessWidget {
                 data.roles = 'user';
               }
               BlocProvider.of<UsersBloc>(context).add(ChangeStatus(data));
-              // add the logic to change user role
             } else if (feature == 'logout') {
               BlocProvider.of<AuthBloc>(context)
                   .add(UserLoggedOut(message: data));
             } else if (feature == 'review') {
               BlocProvider.of<ReviewBloc>(context)
                   .add(DeleteReview(data['data'].id, data['gameId']));
+              // context.pushReplacement('/review',
+              //     extra: {'gameId': data['gameId']});
             } else if (feature == 'profile') {
               BlocProvider.of<AuthBloc>(context).add(UserDeleted(id: data));
             }
+            context.pop();
 
-            // the same for review feature
-
-            Navigator.pop(context);
             if (feature == 'profile') {
-              Navigator.pushNamed(context, '/register');
+              context.go('/register');
             }
             if (feature == 'logout') {
-              Navigator.pushNamed(context, '/login');
+              context.go('/login');
             }
           },
           child: const Text("Yes"),
@@ -216,6 +219,3 @@ class AreYouSureDialogue extends StatelessWidget {
     );
   }
 }
-
-// FILTER DIALOGUE
-

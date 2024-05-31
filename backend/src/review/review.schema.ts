@@ -11,8 +11,8 @@ export class Review {
   rating: number;
   @Prop()
   date: string;
-
-  user: { type: mongoose.Schema.Types.ObjectId; ref: 'User' };
+  @Prop({ default: 'Anonymous' })
+  username: string;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);

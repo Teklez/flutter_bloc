@@ -20,8 +20,10 @@ class AuthService {
       );
       if (response.statusCode == 201) {
         final access_token = json.decode(response.body)['access_token'];
-
-        UserPreferences.saveAccessToken(access_token);
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(access_token);
+        final user = decodedToken['username'];
+        await UserPreferences.saveCurrentUser(user);
+        await UserPreferences.saveAccessToken(access_token);
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', access_token);
@@ -82,7 +84,13 @@ class AuthService {
   // delete user
 
   Future<void> delete(String id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/auth/delete/$id'));
+    final accessToken = await UserPreferences.getAccessToken();
+
+    final response = await http.delete(Uri.parse('$baseUrl/auth/delete/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer $accessToken",
+        });
     if (response.statusCode != 200) {
       throw Exception('Failed to delete user');
     }
@@ -93,7 +101,7 @@ class AuthService {
   Future update(String id, String username, String newPassword,
       String oldPassword) async {
     try {
-      String? accessToken = await UserPreferences.getAccessToken();
+      final accessToken = await UserPreferences.getAccessToken();
       final response = await http.put(
         Uri.parse('$baseUrl/auth/user/update/$id'),
         headers: <String, String>{
@@ -107,9 +115,14 @@ class AuthService {
         }),
       );
       if (response.statusCode == 200) {
-        final access_token = response.body;
+        final access_token = json.decode(response.body)['access_token'];
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', access_token);
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(access_token);
+        final user = decodedToken['username'];
+        await UserPreferences.saveCurrentUser(user);
+        await UserPreferences.saveAccessToken(access_token);
         return getCurrentUserFromStoredToken();
       } else {
         throw Exception('Failed to update: ${response.statusCode}');
@@ -130,8 +143,7 @@ class AuthService {
     });
 
     if (response.statusCode == 200) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove('access_token');
+      await UserPreferences.clear();
     } else {
       throw Exception('Failed to logout');
     }

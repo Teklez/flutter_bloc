@@ -23,6 +23,14 @@ import { PassportModule } from '@nestjs/passport';
         name: 'User',
         schema: UserSchema,
       },
+      {
+        name: 'Review',
+        schema: 'ReviewSchema',
+      },
+      {
+        name: 'Game',
+        schema: 'GameSchema',
+      },
     ]),
     PassportModule.register({ session: true }),
   ],

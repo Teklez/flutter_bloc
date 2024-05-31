@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 class AboutPage extends StatelessWidget {
   @override
@@ -11,7 +12,7 @@ class AboutPage extends StatelessWidget {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushNamed(context, '/home');
+              context.pop();
             },
           )),
       body: SingleChildScrollView(

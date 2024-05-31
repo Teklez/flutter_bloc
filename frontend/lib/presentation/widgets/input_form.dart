@@ -16,7 +16,7 @@ Widget inputForm(String title) {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(width: 0.5, color: Colors.grey),
         ),
-        child: TextField(
+        child: const TextField(
           decoration: InputDecoration(
             border: OutlineInputBorder(),
           ),

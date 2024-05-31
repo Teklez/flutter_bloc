@@ -35,7 +35,7 @@ class UserReview extends StatelessWidget {
                     ),
                     const SizedBox(width: 15),
                     Text(
-                      "review.username", // Assuming username is a field in Review
+                      review.username,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -46,7 +46,10 @@ class UserReview extends StatelessWidget {
                 ),
                 EditDeleteDialogue(
                   route: "/review-edit",
-                  data:{'data':review, 'gameId':gameId}, // Assuming gameName is a relevant data field
+                  data: {
+                    'data': review,
+                    'gameId': gameId
+                  }, // Assuming gameName is a relevant data field
                   feature: "review",
                 ),
               ],

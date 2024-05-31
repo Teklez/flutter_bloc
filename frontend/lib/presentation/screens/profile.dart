@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/application/auth/auth_bloc.dart';
+import 'package:frontend/domain/storage/storage.dart';
 import 'package:frontend/presentation/events/auth_event.dart';
 import 'package:frontend/presentation/states/auth_state.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -21,6 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   bool _isEditing = false;
   String _errorText = '';
+  String? _currentUser;
 
   @override
   void dispose() {
@@ -36,6 +39,11 @@ class _ProfilePageState extends State<ProfilePage> {
       _isEditing = !_isEditing;
       _errorText = ''; // Clear error text when toggling edit mode
     });
+  }
+
+  Future<void> _getUser() async {
+    final curUser = await UserPreferences.getCurrentUser();
+    _currentUser = curUser;
   }
 
   void _saveProfile(String id, String user) {
@@ -84,10 +92,15 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back), // Customize the icon
+            onPressed: () {
+              // Handle back button press (e.g., pop the current route)
+              context.push('/home');
+            }),
       ),
       body: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-        print(
-            "================================================================================>state: $state");
         String username = 'username';
         String id = '';
         if (state is AuthSuccess) {
@@ -163,7 +176,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ElevatedButton(
                     onPressed: () {
                       _saveProfile(id, username);
-                      Navigator.popAndPushNamed(context, '/profile');
+                      context.pop();
+                      context.push('/profile');
                     },
                     child: const Text('Save'),
                   ),

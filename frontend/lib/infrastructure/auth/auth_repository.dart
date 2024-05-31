@@ -22,8 +22,6 @@ class AuthRepository {
     try {
       return await authService.update(id, username, newPassword, oldPassword);
     } catch (e) {
-      print(
-          'Error updating user============================================> from repository: $e');
       rethrow;
     }
   }

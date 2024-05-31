@@ -5,7 +5,6 @@ abstract class UsersState extends Equatable {
   const UsersState();
 }
 
-
 class UsersInitial extends UsersState {
   @override
   List<Object?> get props => [];
@@ -20,7 +19,6 @@ class UsersLoadSuccess extends UsersState {
   List<Object?> get props => [users];
 }
 
-
 class UsersError extends UsersState {
   @override
   List<Object?> get props => [];
@@ -30,8 +28,6 @@ class UsersEmpty extends UsersState {
   @override
   List<Object?> get props => [];
 }
-
-
 
 class UsersLoadInProgress extends UsersState {
   @override

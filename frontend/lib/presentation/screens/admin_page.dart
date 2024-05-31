@@ -6,6 +6,7 @@ import 'package:frontend/presentation/states/game_states.dart';
 
 import 'package:frontend/presentation/widgets/custom_card.dart';
 import 'package:frontend/presentation/widgets/drawer.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminPage extends StatelessWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class AdminPage extends StatelessWidget {
               semanticLabel: 'search',
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/search');
+              context.push('/search');
             },
           ),
         ],
@@ -50,7 +51,8 @@ class AdminPage extends StatelessWidget {
             return const Center(child: Text("No games found"));
           } else if (state is GameLoadSuccess) {
             return GridView.count(
-              crossAxisCount: 1,
+              crossAxisCount: 2,
+              mainAxisSpacing: 10.0,
               padding: const EdgeInsets.all(20.0),
               childAspectRatio: 8.0 / 10.0,
               children: state.games.map((game) {

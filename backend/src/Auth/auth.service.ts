@@ -13,12 +13,18 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/logIn.dto';
 import { ObjectId } from 'mongodb';
 import { Request } from 'express';
+import { Review } from 'src/review/review.schema';
+import { Game } from 'src/game/game.schema';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name)
     private userModel: Model<User>,
+    @InjectModel(Game.name)
+    private gameModel: Model<Game>,
+    @InjectModel(Review.name)
+    private reviewModel: Model<Review>,
     private jwtService: JwtService,
   ) {}
 
@@ -68,7 +74,13 @@ export class AuthService {
       console.log('user not found');
       throw new HttpException('userNotFound', HttpStatus.NOT_FOUND);
     }
-
+    console.log(
+      'logged in as ===============================================+>',
+      loginDto.username,
+      '\n',
+      "with password ===============================================+> '",
+      loginDto.password,
+    );
     const isPasswordValid = await bcrypt.compare(
       loginDto.password,
       user.password,
@@ -129,6 +141,15 @@ export class AuthService {
     newName: string,
   ): Promise<User> {
     const user = await this.userModel.findById(id).exec();
+    const username = user.username;
+    const reviews = await this.reviewModel.find().exec();
+
+    for (let review of reviews) {
+      if (review.username == username) {
+        review.username = newName;
+        review.save();
+      }
+    }
 
     const isPasswordSame = await this.passworMatch(oldPassword, user.password);
     if (!isPasswordSame) {
@@ -152,6 +173,17 @@ export class AuthService {
 
   // delete user
   async deleteUser(id: ObjectId): Promise<User> {
+    const user = await this.userModel.findById(id);
+    const username = user.username;
+    var reviews = await this.reviewModel.find().exec();
+
+    // for (let review of reviews) {
+    //   if (review.username == username) {
+    //     await this.reviewModel.findOneAndDelete({ username: username });
+    //   }
+    // }
+    // this.reviewModel.bulkSave;
+
     const deletedUser = await this.userModel.findByIdAndDelete(id);
     return deletedUser;
   }

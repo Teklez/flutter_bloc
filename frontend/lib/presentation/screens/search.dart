@@ -6,7 +6,6 @@ import 'package:frontend/domain/game_model.dart';
 import 'package:frontend/presentation/states/game_states.dart';
 import 'package:frontend/presentation/screens/game_detail.dart';
 
-
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
@@ -125,18 +124,18 @@ class _SearchPageState extends State<SearchPage> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           image: DecorationImage(
-            image: AssetImage(game.image),
+            image: AssetImage('assets/${game.image}.jpg'),
             fit: BoxFit.cover,
           ),
         ),
       ),
       title: Text(game.name),
       subtitle: Text(game.publisher),
-      trailing: const Row(
+      trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "4.5", 
+            game.rating.toString(),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16.0,

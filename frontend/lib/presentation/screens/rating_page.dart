@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/application/review/review_bloc.dart';
+import 'package:frontend/domain/storage/storage.dart';
 import 'package:frontend/presentation/events/review_event.dart';
 import 'package:frontend/domain/review_model.dart';
+import 'package:go_router/go_router.dart';
 
 class RatingForm extends StatefulWidget {
+  final String gameId;
+  const RatingForm({Key? key, required this.gameId}) : super(key: key);
+
   @override
   _RatingFormState createState() => _RatingFormState();
 }
@@ -12,13 +17,48 @@ class RatingForm extends StatefulWidget {
 class _RatingFormState extends State<RatingForm> {
   final TextEditingController reviewController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   int rating = 0;
+  var _currentUser;
+  @override
+  void initState() {
+    super.initState();
+    getuser();
+  }
+
+  Future<void> getuser() async {
+    final user = await UserPreferences.getCurrentUser();
+    setState(() {
+      _currentUser = user;
+    });
+  }
+
+  String formatCurrentDate() {
+    DateTime now = DateTime.now();
+    List<String> months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    String month = months[now.month - 1];
+    String day = now.day.toString();
+    String year = now.year.toString();
+
+    return "$month $day, $year";
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final String gameId = arguments['gameId'];
+    final String gameId = widget.gameId;
 
     return Scaffold(
       appBar: AppBar(
@@ -26,7 +66,7 @@ class _RatingFormState extends State<RatingForm> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -100,16 +140,19 @@ class _RatingFormState extends State<RatingForm> {
                         String review = reviewController.text;
 
                         final curReview = Review(
+                          username: _currentUser,
                           comment: review,
                           rating: ratingValue,
-                          date: DateTime.now().toString(),
+                          date: formatCurrentDate(),
                         );
 
                         BlocProvider.of<ReviewBloc>(context).add(
                           AddReview(curReview, gameId),
                         );
 
-                        Navigator.pop(context);
+                        context.pop();
+                        context.pushReplacement('/review',
+                            extra: {"gameId": gameId});
                       }
                     },
                     child: const Text(

@@ -10,16 +10,14 @@ class UsersRepository {
     try {
       return await userService.fetchUsers();
     } catch (e) {
-      print('Error fetching users: $e');
       rethrow;
     }
   }
 
-  Future<void> changeStatus(user ) async {
+  Future<void> changeStatus(user) async {
     try {
       await userService.changeStatus(user);
     } catch (e) {
-      print('Error changing status: $e');
       rethrow;
     }
   }

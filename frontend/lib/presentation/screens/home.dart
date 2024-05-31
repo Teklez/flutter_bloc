@@ -5,6 +5,7 @@ import 'package:frontend/presentation/events/game_events.dart';
 import 'package:frontend/presentation/states/game_states.dart';
 import 'package:frontend/presentation/widgets/custom_card.dart';
 import 'package:frontend/presentation/widgets/drawer.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class HomePage extends StatelessWidget {
               semanticLabel: 'search',
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/search');
+              context.push('/search');
             },
           ),
         ],

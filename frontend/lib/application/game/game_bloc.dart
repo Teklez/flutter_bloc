@@ -17,18 +17,15 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }
 
   void _handleFetchGames(FetchGames event, Emitter<GameState> emit) async {
-    print("============================================> fetching games");
     try {
       final List<Game> games = await gameRepository.fetchGames();
-      // print("Games: $games ");
       if (games.isEmpty) {
         emit(GameEmpty());
-        return;
       } else {
         emit(GameLoadSuccess(games));
       }
     } catch (e) {
-      throw Exception('Error fetching games: $e');
+      emit(GameError());
     }
   }
 

@@ -26,9 +26,10 @@ class AddReview extends ReviewEvent {
 }
 
 class EditReview extends ReviewEvent {
+  final String gameId;
   final Review review;
 
-  const EditReview(this.review);
+  const EditReview(this.review, this.gameId);
 
   @override
   List<Object?> get props => [review];

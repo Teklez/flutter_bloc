@@ -39,11 +39,17 @@ export class ReviewService {
 
   async createReview(reviewDto: ReviewDto, gameId: string): Promise<Review> {
     const id = new ObjectId(gameId);
-    const game = await this.gameModel.findById(id);
+    const game = await this.gameModel.findById(id).exec();
     const review = new this.reviewModel(reviewDto);
     const newReview = await review.save();
     console.log(`=====================>${newReview.comment}`);
     console.log(`=====================>${reviewDto.comment}`);
+
+    const gameRating = game.rating;
+    const reviewRating = reviewDto.rating;
+    const totalRating = gameRating + reviewRating;
+    const numReviews = game.reviews.length + 1;
+    game.rating = totalRating / numReviews;
     game.reviews.push(newReview._id);
     game.save();
 
@@ -82,6 +88,13 @@ export class ReviewService {
     const id_o = new ObjectId(id);
 
     const game = await this.gameModel.findById(gameId_o);
+    const gameRating = game.rating;
+    const deletedReview = await this.reviewModel.findById(id_o);
+    const reviewRating = deletedReview.rating;
+
+    const totalRating = gameRating - reviewRating;
+    const numReviews = game.reviews.length - 1;
+    game.rating = totalRating / numReviews;
 
     if (!game) {
       throw new NotFoundException('Game not found');

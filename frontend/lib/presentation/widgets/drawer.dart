@@ -4,6 +4,7 @@ import 'package:frontend/application/auth/auth_bloc.dart';
 import 'package:frontend/presentation/events/auth_event.dart';
 import 'package:frontend/presentation/states/auth_state.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
+import 'package:go_router/go_router.dart';
 
 class MenuDrawer extends StatefulWidget {
   final List<List<String>> menuItems;
@@ -108,7 +109,8 @@ class _MenuDrawerState extends State<MenuDrawer> {
                 },
               );
             } else {
-              Navigator.pushNamed(context, "${item[1]}");
+              GoRouter.of(context)
+                  .push(item[1]); // Using GoRouter for navigation
             }
           },
         ),

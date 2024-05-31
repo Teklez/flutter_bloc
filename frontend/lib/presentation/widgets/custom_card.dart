@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/game_model.dart';
-import 'package:frontend/presentation/screens/game_detail.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
+import 'package:go_router/go_router.dart';
 //============================================================================== USER GAME CARD =================================================================
 
 class GameCard extends StatelessWidget {
@@ -20,7 +20,7 @@ class GameCard extends StatelessWidget {
           AspectRatio(
             aspectRatio: 18 / 14,
             child: Image.asset(
-              game.image,
+              'assets/${game.image}.jpg',
               fit: BoxFit.fill,
             ),
           ),
@@ -47,8 +47,8 @@ class GameCard extends StatelessWidget {
                         color: Colors.yellow,
                       ),
                       const SizedBox(width: 8.0),
-                      const Text(
-                        '4.5',
+                      Text(
+                        game.rating.toStringAsFixed(1),
                         // style: theme.textTheme.labelSmall,
                       ),
                       const SizedBox(
@@ -56,12 +56,7 @@ class GameCard extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    GameDetailPage(game: game)),
-                          );
+                          context.push('/game-detail', extra: {'game': game});
                         },
                         icon: const Icon(
                           Icons.details_rounded,
@@ -99,7 +94,7 @@ class AGameCard extends StatelessWidget {
           AspectRatio(
             aspectRatio: 18 / 14,
             child: Image.asset(
-              game.image,
+              'assets/${game.image}.jpg',
               fit: BoxFit.fill,
             ),
           ),
@@ -174,7 +169,7 @@ class GameDetail extends StatelessWidget {
             AspectRatio(
               aspectRatio: 18 / 14,
               child: Image.asset(
-                game.image,
+                'assets/${game.image}.jpg',
                 fit: BoxFit.cover,
               ),
             ),
@@ -184,7 +179,7 @@ class GameDetail extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     game.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -206,7 +201,7 @@ class GameDetail extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     game.publisher,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16.0,
                       fontStyle: FontStyle.italic,
                     ),
@@ -231,15 +226,15 @@ class GameDetail extends StatelessWidget {
                       print("betted");
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
+                      backgroundColor: WidgetStateProperty.all(
                           const Color.fromARGB(
                               255, 207, 75, 91)), // Set background color
-                      foregroundColor: MaterialStateProperty.all(
+                      foregroundColor: WidgetStateProperty.all(
                           Colors.white), // Set text color
-                      padding: MaterialStateProperty.all(
+                      padding: WidgetStateProperty.all(
                           const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10)), // Set padding
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -260,8 +255,7 @@ class GameDetail extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/review',
-                              arguments: {'gameId': game.id});
+                          context.push('/review', extra: {'gameId': game.id});
                         },
                         icon: const Icon(Icons.arrow_forward),
                       ),

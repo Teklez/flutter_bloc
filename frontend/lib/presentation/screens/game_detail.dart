@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/game_model.dart';
 import 'package:frontend/presentation/widgets/custom_card.dart';
+import 'package:go_router/go_router.dart';
 
 class GameDetailPage extends StatelessWidget {
   final Game game;
@@ -13,7 +14,7 @@ class GameDetailPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            context.push('/home');
           },
         ),
       ),

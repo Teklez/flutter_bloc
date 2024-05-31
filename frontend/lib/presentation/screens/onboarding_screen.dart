@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -44,16 +45,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             bottom: 20.0,
             right: 20.0,
             child: IconButton(
-              icon: Icon(Icons.arrow_forward_sharp,
-                  color: _currentPage == 1
-                      ? Colors.grey
-                      : Color.fromARGB(255, 18, 94, 217)),
+              icon: Icon(
+                Icons.arrow_forward_sharp,
+                color: _currentPage == 1
+                    ? Colors.grey
+                    : const Color.fromARGB(255, 18, 94, 217),
+              ),
               onPressed: () {
                 if (_currentPage == 1) {
-                  Navigator.pushReplacementNamed(context, '/login');
+                  context.go('/login');
                 } else {
                   _pageController.nextPage(
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                   );
                 }
@@ -95,15 +98,13 @@ class OnboardingPage1 extends StatelessWidget {
     return Container(
       child: Center(
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(
-                  'assets/game9.jpg'), // Or NetworkImage for network images
-              fit: BoxFit
-                  .cover, // Adjust how the image fits the container (optional)
+              image: AssetImage('assets/game9.jpg'),
+              fit: BoxFit.cover,
             ),
           ),
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -112,8 +113,8 @@ class OnboardingPage1 extends StatelessWidget {
                 width: 100,
                 height: 100,
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Welcome to BetEbet',
                 style: TextStyle(
                   fontSize: 24,
@@ -121,8 +122,8 @@ class OnboardingPage1 extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'Embark on a Thrilling Betting Adventure with BetEbet. Explore a world of sports betting, casino games, and more at your fingertips.',
                 style: TextStyle(
                   fontSize: 16,
@@ -141,11 +142,11 @@ class OnboardingPage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromARGB(255, 211, 47, 47),
+      color: const Color.fromARGB(255, 211, 47, 47),
       child: Center(
         child: Container(
-          padding: EdgeInsets.all(10),
-          child: Column(
+          padding: const EdgeInsets.all(10),
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
@@ -163,7 +164,7 @@ class OnboardingPage2 extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                ' BetEbet offers a seamless and engaging platform to indulge in your passion for betting and experience the excitement of wagering like never before.',
+                'BetEbet offers a seamless and engaging platform to indulge in your passion for betting and experience the excitement of wagering like never before.',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,

@@ -31,18 +31,24 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   void _handleAddReview(AddReview event, Emitter<ReviewState> emit) async {
     try {
       await reviewRepository.createReview(event.review, event.gameId);
-
-      emit(ReviewAdded());
+      final List<Review> reviews =
+          await reviewRepository.getReviews(event.gameId);
+      emit(ReviewsLoadSuccess(reviews));
     } catch (e) {
+      // Log the caught exception for debugging
+
+      // Emit a failure state with a descriptive error message
       emit(ReviewOperationFailure("Failed to add review"));
-      throw Exception('Error adding review: $e');
     }
   }
 
   void _handleEditReview(EditReview event, Emitter<ReviewState> emit) async {
     try {
       await reviewRepository.updateReview(event.review.id, event.review);
-      emit(ReveiwEdited());
+      final List<Review> reviews =
+          await reviewRepository.getReviews(event.gameId);
+
+      emit(ReviewsLoadSuccess(reviews));
     } catch (e) {
       emit(ReviewOperationFailure("Failed to update review"));
     }
@@ -52,7 +58,9 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       DeleteReview event, Emitter<ReviewState> emit) async {
     try {
       await reviewRepository.deleteReview(event.reviewId, event.gameId);
-      emit(ReviewOperationSuccess("Review deleted successfully"));
+      final List<Review> reviews =
+          await reviewRepository.getReviews(event.gameId);
+      emit(ReviewsLoadSuccess(reviews));
     } catch (e) {
       emit(ReviewOperationFailure("Failed to delete review"));
     }

@@ -16,7 +16,7 @@ import { ObjectId } from 'mongodb';
 @Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
-  @Public()
+
   @Get('/game/:gameId')
   async getReviews(@Param('gameId') gameId: string): Promise<Review[]> {
     return this.reviewService.getReviews(gameId);

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/application/auth/auth_bloc.dart';
 import 'package:frontend/presentation/events/auth_event.dart';
 import 'package:frontend/presentation/states/auth_state.dart';
-import 'register.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -21,11 +21,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Removes the back button
-        backgroundColor: Color.fromARGB(255, 211, 47, 47),
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color.fromARGB(255, 211, 47, 47),
       ),
       body: Container(
-        margin: EdgeInsets.only(bottom: 20.0),
+        margin: const EdgeInsets.only(bottom: 20.0),
         child: content(context),
       ),
     );
@@ -45,12 +45,11 @@ class _LoginPageState extends State<LoginPage> {
         }
 
         if (state is AuthSuccess) {
+          print('AuthSuccess: ${state.message}');
           if (state.message['roles'][0] == "admin") {
-            Navigator.pushNamedAndRemoveUntil(
-                context, "/admin", (route) => false);
+            context.go('/admin');
           } else {
-            Navigator.pushNamedAndRemoveUntil(
-                context, "/home", (route) => false);
+            context.go('/home');
           }
         }
       },
@@ -154,19 +153,24 @@ class _LoginPageState extends State<LoginPage> {
                             width: 200,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 211, 47, 47),
+                              color: const Color.fromARGB(255, 211, 47, 47),
                               borderRadius: BorderRadius.circular(25),
                             ),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    Color.fromARGB(255, 211, 47, 47),
+                                    const Color.fromARGB(255, 211, 47, 47),
                                 shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(10.0))),
                               ),
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
+                                  print('Login button pressed');
+                                  print(
+                                      'Username: ${_usernameController.text}');
+                                  print(
+                                      'Password: ${_passwordController.text}');
                                   authBloc.add(UserLoggedIn(
                                     username: _usernameController.text,
                                     password: _passwordController.text,
@@ -193,13 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                             const Text("New User? "),
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RegistrationPage(),
-                                  ),
-                                );
+                                context.push('/register');
                               },
                               child: const Text(
                                 "Sign Up",
