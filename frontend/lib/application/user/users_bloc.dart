@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/users/users_event.dart';
-import 'package:frontend/users/users_repository.dart';
-import 'package:frontend/users/users_state.dart';
+import 'package:frontend/presentation/events/users_event.dart';
+import 'package:frontend/infrastructure/user/users_repository.dart';
+import 'package:frontend/presentation/states/users_state.dart';
 
 class UsersBloc extends Bloc<UsersEvent, UsersState> {
   final UsersRepository usersRepository;

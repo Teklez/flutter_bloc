@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/game/game_bloc.dart';
-import 'package:frontend/game/game_events.dart';
-import 'package:frontend/game/game_model.dart';
-import 'package:frontend/game/game_states.dart';
+import 'package:frontend/application/game/game_bloc.dart';
+import 'package:frontend/presentation/events/game_events.dart';
+import 'package:frontend/domain/game_model.dart';
+import 'package:frontend/presentation/states/game_states.dart';
 import 'package:frontend/presentation/screens/game_detail.dart';
 
 

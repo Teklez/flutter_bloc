@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/widgets/rating.dart';
 import 'package:frontend/presentation/widgets/rating_Progress_Indicator.dart';
 import 'package:frontend/presentation/widgets/user_review_card.dart'; // Assuming this is where UserReview widget is defined
-import 'package:frontend/review/review_bloc.dart';
-import 'package:frontend/review/review_event.dart';
-import 'package:frontend/review/review_model.dart';
-import 'package:frontend/review/review_state.dart';
+import 'package:frontend/application/review/review_bloc.dart';
+import 'package:frontend/presentation/events/review_event.dart';
+import 'package:frontend/domain/review_model.dart';
+import 'package:frontend/presentation/states/review_state.dart';
 
 class ReviewPage extends StatefulWidget {
   const ReviewPage({Key? key}) : super(key: key);

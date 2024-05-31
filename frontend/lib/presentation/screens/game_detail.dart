@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/game/game_model.dart';
+import 'package:frontend/domain/game_model.dart';
 import 'package:frontend/presentation/widgets/custom_card.dart';
 
 class GameDetailPage extends StatelessWidget {

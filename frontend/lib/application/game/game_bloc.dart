@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/game/game_events.dart';
-import 'package:frontend/game/game_model.dart';
-import 'package:frontend/game/game_states.dart';
+import 'package:frontend/presentation/events/game_events.dart';
+import 'package:frontend/domain/game_model.dart';
+import 'package:frontend/presentation/states/game_states.dart';
 
-import 'game_repository.dart';
+import '../../infrastructure/game/game_repository.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   final GameRepository gameRepository;

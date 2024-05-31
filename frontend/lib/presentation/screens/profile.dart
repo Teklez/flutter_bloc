@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/auth/auth_bloc.dart';
-import 'package:frontend/auth/auth_event.dart';
-import 'package:frontend/auth/auth_state.dart';
+import 'package:frontend/application/auth/auth_bloc.dart';
+import 'package:frontend/presentation/events/auth_event.dart';
+import 'package:frontend/presentation/states/auth_state.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -163,7 +163,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ElevatedButton(
                     onPressed: () {
                       _saveProfile(id, username);
-                      Navigator.pushNamed(context, '/profile');
+                      Navigator.popAndPushNamed(context, '/profile');
                     },
                     child: const Text('Save'),
                   ),

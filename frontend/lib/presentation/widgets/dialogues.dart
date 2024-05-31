@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/auth/auth_bloc.dart';
-import 'package:frontend/auth/auth_event.dart';
-import 'package:frontend/game/game_bloc.dart';
-import 'package:frontend/game/game_events.dart';
+import 'package:frontend/application/auth/auth_bloc.dart';
+import 'package:frontend/presentation/events/auth_event.dart';
+import 'package:frontend/application/game/game_bloc.dart';
+import 'package:frontend/presentation/events/game_events.dart';
 import 'package:frontend/presentation/screens/game_add.dart';
 import 'package:frontend/presentation/screens/review_edit.dart';
-import 'package:frontend/review/review_bloc.dart';
-import 'package:frontend/review/review_event.dart';
-import 'package:frontend/users/users_bloc.dart';
-import 'package:frontend/users/users_event.dart';
+import 'package:frontend/application/review/review_bloc.dart';
+import 'package:frontend/presentation/events/review_event.dart';
+import 'package:frontend/application/user/users_bloc.dart';
+import 'package:frontend/presentation/events/users_event.dart';
 
 // EDIT DELETE DIALOGUE
 // This dialogue is used to edit or delete a game. It is used in the AdminGameCard widget.

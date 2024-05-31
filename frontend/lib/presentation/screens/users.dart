@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
 import 'package:frontend/presentation/widgets/drawer.dart';
-import 'package:frontend/users/users_bloc.dart';
-import 'package:frontend/users/users_event.dart';
-import 'package:frontend/users/users_state.dart';
+import 'package:frontend/application/user/users_bloc.dart';
+import 'package:frontend/presentation/events/users_event.dart';
+import 'package:frontend/presentation/states/users_state.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});

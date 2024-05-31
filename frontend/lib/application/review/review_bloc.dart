@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/review/review_event.dart';
-import 'package:frontend/review/review_model.dart';
-import 'package:frontend/review/review_repository.dart';
-import 'package:frontend/review/review_state.dart';
+import 'package:frontend/presentation/events/review_event.dart';
+import 'package:frontend/domain/review_model.dart';
+import 'package:frontend/infrastructure/review/review_repository.dart';
+import 'package:frontend/presentation/states/review_state.dart';
 
 class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   final ReviewRepository reviewRepository;

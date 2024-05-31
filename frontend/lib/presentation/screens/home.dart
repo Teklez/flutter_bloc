@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/game/game_bloc.dart';
-import 'package:frontend/game/game_events.dart';
-import 'package:frontend/game/game_states.dart';
+import 'package:frontend/application/game/game_bloc.dart';
+import 'package:frontend/presentation/events/game_events.dart';
+import 'package:frontend/presentation/states/game_states.dart';
 import 'package:frontend/presentation/widgets/custom_card.dart';
 import 'package:frontend/presentation/widgets/drawer.dart';
 
@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
     });
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(41, 37, 37, 1),
+        backgroundColor: Color.fromARGB(255, 211, 47, 47),
         actions: <Widget>[
           IconButton(
             icon: const Icon(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/auth/auth_bloc.dart';
-import 'package:frontend/auth/auth_repository.dart';
-import 'package:frontend/auth/auth_service.dart';
-import 'package:frontend/game/game_bloc.dart';
-import 'package:frontend/game/game_model.dart';
-import 'package:frontend/game/game_repository.dart';
-import 'package:frontend/game/game_service.dart';
+import 'package:frontend/application/auth/auth_bloc.dart';
+import 'package:frontend/infrastructure/auth/auth_repository.dart';
+import 'package:frontend/infrastructure/auth/auth_service.dart';
+import 'package:frontend/application/game/game_bloc.dart';
+import 'package:frontend/domain/game_model.dart';
+import 'package:frontend/infrastructure/game/game_repository.dart';
+import 'package:frontend/infrastructure/game/game_service.dart';
 import 'package:frontend/presentation/screens/about.dart';
 import 'package:frontend/presentation/screens/game_add.dart';
 import 'package:frontend/presentation/screens/game_detail.dart';
@@ -19,15 +19,15 @@ import 'package:frontend/presentation/screens/review_edit.dart';
 import 'package:frontend/presentation/screens/search.dart';
 import 'package:frontend/presentation/screens/users.dart';
 import 'package:frontend/presentation/screens/onboarding_screen.dart';
-import 'package:frontend/presentation/widgets/rating_page.dart';
-import 'package:frontend/review/review_bloc.dart';
-import 'package:frontend/review/review_repository.dart';
-import 'package:frontend/review/review_service.dart';
-import 'package:frontend/users/users_bloc.dart';
-import 'package:frontend/users/users_repository.dart';
-import 'package:frontend/users/users_service.dart';
+import 'package:frontend/presentation/screens/rating_page.dart';
+import 'package:frontend/application/review/review_bloc.dart';
+import 'package:frontend/infrastructure/review/review_repository.dart';
+import 'package:frontend/infrastructure/review/review_service.dart';
+import 'package:frontend/application/user/users_bloc.dart';
+import 'package:frontend/infrastructure/user/users_repository.dart';
+import 'package:frontend/infrastructure/user/users_service.dart';
 
-import 'presentation/screens/profile.dart';
+import '../screens/profile.dart';
 
 class BetApp extends StatelessWidget {
   const BetApp({Key? key}) : super(key: key);

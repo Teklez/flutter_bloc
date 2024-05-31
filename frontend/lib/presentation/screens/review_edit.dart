@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/widgets/clickableStar.dart';
 import 'package:frontend/presentation/widgets/rating.dart';
-import 'package:frontend/review/review_bloc.dart';
-import 'package:frontend/review/review_event.dart';
-import 'package:frontend/review/review_model.dart';
+import 'package:frontend/application/review/review_bloc.dart';
+import 'package:frontend/presentation/events/review_event.dart';
+import 'package:frontend/domain/review_model.dart';
 
 class ReviewEdit extends StatefulWidget {
   final review;

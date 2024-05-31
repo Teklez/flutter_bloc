@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/auth/auth_event.dart';
-import 'package:frontend/auth/auth_repository.dart';
-import 'package:frontend/auth/auth_state.dart';
+import 'package:frontend/presentation/events/auth_event.dart';
+import 'package:frontend/infrastructure/auth/auth_repository.dart';
+import 'package:frontend/presentation/states/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
@@ -34,11 +34,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _handleAppStarted(AppStarted event, Emitter<AuthState> emit) async {
     try {
       final user = await authRepository.getCurrentUser();
-      if (user != null) {
-        emit(AuthSuccess(message: user));
-      } else {
-        emit(const AuthFailure(message: 'Not authenticated'));
-      }
+      // if (user != null) {
+      emit(AuthSuccess(message: user));
+      // } else {
+      //   emit(const AuthFailure(message: 'Not authenticated'));
+      // }
     } catch (e) {
       emit(const AuthFailure(message: 'Not authenticated'));
     }

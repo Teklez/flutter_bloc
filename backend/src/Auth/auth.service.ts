@@ -69,11 +69,10 @@ export class AuthService {
       throw new HttpException('userNotFound', HttpStatus.NOT_FOUND);
     }
 
-    if (user.roles[0] == 'admin') {
-      var isPasswordValid = user.password == loginDto.password;
-    } else {
-      isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
-    }
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
 
     if (!isPasswordValid) {
       console.log('password incorrect');

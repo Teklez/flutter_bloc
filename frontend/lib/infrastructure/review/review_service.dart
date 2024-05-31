@@ -1,4 +1,4 @@
-import 'package:frontend/review/review_model.dart';
+import 'package:frontend/domain/review_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

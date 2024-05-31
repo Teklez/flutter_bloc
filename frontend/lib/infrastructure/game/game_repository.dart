@@ -1,5 +1,5 @@
-import 'package:frontend/game/game_model.dart';
-import 'package:frontend/game/game_service.dart';
+import 'package:frontend/domain/game_model.dart';
+import 'package:frontend/infrastructure/game/game_service.dart';
 
 class GameRepository {
   final GameService gameService;

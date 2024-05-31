@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/game/game_model.dart';
+import 'package:frontend/domain/game_model.dart';
 import 'package:frontend/presentation/screens/game_detail.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
 //============================================================================== USER GAME CARD =================================================================
@@ -162,8 +162,12 @@ class GameDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Card(
+        color: Colors.black12,
         clipBehavior: Clip.antiAlias,
-        elevation: 0.3,
+        elevation: 0.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -171,55 +175,71 @@ class GameDetail extends StatelessWidget {
               aspectRatio: 18 / 14,
               child: Image.asset(
                 game.image,
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 5.0),
+              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
               child: Column(
                 children: <Widget>[
                   Text(
                     game.name,
-                    softWrap: false,
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
                   const SizedBox(height: 10),
                   Text(
                     game.description,
-                    softWrap: false,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.grey[700],
+                    ),
+                    softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
                   ),
                   const SizedBox(height: 10),
                   Text(
                     game.publisher,
-                    softWrap: false,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
                   const SizedBox(height: 10),
                   Text(
                     game.releaseDate,
-                    softWrap: false,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.grey[600],
+                    ),
+                    softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       print("betted");
                     },
                     style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
+                      backgroundColor: MaterialStateProperty.all(
                           const Color.fromARGB(
                               255, 207, 75, 91)), // Set background color
-                      foregroundColor: WidgetStateProperty.all(
+                      foregroundColor: MaterialStateProperty.all(
                           Colors.white), // Set text color
-                      padding: WidgetStateProperty.all(
+                      padding: MaterialStateProperty.all(
                           const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10)), // Set padding
-                      shape: WidgetStateProperty.all(
+                      shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -227,11 +247,17 @@ class GameDetail extends StatelessWidget {
                     ),
                     child: const Text("Bet"),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("See review"),
+                      const Text(
+                        "See review",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                       IconButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/review',

@@ -1,5 +1,5 @@
-import 'package:frontend/users/users_model.dart';
-import 'package:frontend/users/users_service.dart';
+import 'package:frontend/domain/users_model.dart';
+import 'package:frontend/infrastructure/user/users_service.dart';
 
 class UsersRepository {
   final UsersService userService;

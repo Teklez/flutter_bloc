@@ -1,5 +1,5 @@
-import 'package:frontend/review/review_model.dart';
-import 'package:frontend/review/review_service.dart';
+import 'package:frontend/domain/review_model.dart';
+import 'package:frontend/infrastructure/review/review_service.dart';
 
 class ReviewRepository {
   final ReviewService reviewService;

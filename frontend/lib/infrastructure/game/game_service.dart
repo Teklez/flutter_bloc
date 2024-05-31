@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:frontend/game/game_model.dart';
+import 'package:frontend/domain/game_model.dart';
 import 'package:http/http.dart' as http;
 
 class GameService {

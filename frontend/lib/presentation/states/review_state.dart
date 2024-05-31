@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:frontend/review/review_model.dart';
+import 'package:frontend/domain/review_model.dart';
 
 abstract class ReviewState extends Equatable {
   const ReviewState();

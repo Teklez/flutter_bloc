@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/presentation/widgets/dialogues.dart';
 import 'package:frontend/presentation/widgets/rating.dart';
-import 'package:frontend/review/review_model.dart';
+import 'package:frontend/domain/review_model.dart';
 import 'package:readmore/readmore.dart';
 
 class UserReview extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:frontend/auth/auth_service.dart';
+import 'package:frontend/infrastructure/auth/auth_service.dart';
 
 class AuthRepository {
   final AuthService authService;
