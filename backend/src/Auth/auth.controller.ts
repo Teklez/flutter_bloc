@@ -34,20 +34,19 @@ export class AuthController {
   }
 
   // @Roles(Role.Admin)
-  @Public()
+
   @Get('users')
   async getUsers(): Promise<User[]> {
     return this.authService.getUsers();
   }
 
-  @Public()
   @Get('user/:id')
   async getUser(@Param('id') id: string): Promise<User> {
     const objectId = new ObjectId(id);
     return this.authService.getUser(objectId);
   }
 
-  @Public()
+  @Roles(Role.Admin)
   @Put('update/:id')
   async userInfoUpdate(
     @Param('id') id: string,
@@ -57,7 +56,6 @@ export class AuthController {
     return this.authService.userInfoUpdate(objectId, loginDto);
   }
 
-  @Public()
   @Put('user/update/:id')
   async updateUser(@Param('id') id: string, @Body() updatedata): Promise<User> {
     const objectId = new ObjectId(id);
@@ -69,18 +67,16 @@ export class AuthController {
       updatedata.username,
     );
   }
-  @Public()
+
   @Delete('delete/:id')
   async deleteUser(@Param('id') id: string): Promise<User> {
     console.log('id', id);
     const objectId = new ObjectId(id);
     return this.authService.deleteUser(objectId);
   }
-  @Public()
+
   @Get('/logout')
   async logOut(@Req() req: Request): Promise<any> {
     return this.authService.logout(req);
   }
 }
-
-

@@ -21,7 +21,7 @@ export class ReviewController {
   async getReviews(@Param('gameId') gameId: string): Promise<Review[]> {
     return this.reviewService.getReviews(gameId);
   }
-  @Public()
+
   @Post('/game/:gameId')
   async createReview(
     @Body() reviewDto: ReviewDto,
@@ -30,13 +30,11 @@ export class ReviewController {
     return this.reviewService.createReview(reviewDto, gameId);
   }
 
-  @Public()
   @Get(':id')
   async getReview(@Param('id') id: string): Promise<Review> {
     return this.reviewService.getReview(id);
   }
 
-  @Public()
   @Put('update/:id')
   async updateReview(
     @Param('id') id: string,
@@ -45,7 +43,6 @@ export class ReviewController {
     return this.reviewService.updateReview(id, reviewDto);
   }
 
-  @Public()
   @Delete('delete/:id')
   async deleteReview(
     @Param('id') id: string,

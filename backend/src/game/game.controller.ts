@@ -17,26 +17,25 @@ import { Roles } from 'src/Auth/decorator/roels.decorator';
 @Controller('games')
 export class GameController {
   constructor(private readonly gameService: GameService) {}
-  @Public()
+
   @Get()
   async getGames(): Promise<Game[]> {
     return this.gameService.getGames();
   }
-  
+
   // @Roles(Role.Admin)
-  @Public()
-  @Post("/add")
+  @Roles(Role.Admin)
+  @Post('/add')
   async createGame(@Body() gameDto: GameDto): Promise<Game> {
     return this.gameService.createGame(gameDto);
   }
 
-  @Public()
   @Get(':id')
   async getGame(@Param('id') id: string): Promise<Game> {
     return this.gameService.getGame(id);
   }
   // @Roles(Role.Admin)
-  @Public()
+  @Roles(Role.Admin)
   @Put('update/:id')
   async updateGame(
     @Param('id') id: string,
@@ -44,12 +43,10 @@ export class GameController {
   ): Promise<Game> {
     return this.gameService.updateGame(id, gameDto);
   }
-  
-  @Public()
+  @Roles(Role.Admin)
   @Delete('delete/:id')
   async deleteGame(@Param('id') id: string): Promise<Game> {
     const objectId = new ObjectId(id);
     return this.gameService.deleteGame(objectId);
   }
 }
-

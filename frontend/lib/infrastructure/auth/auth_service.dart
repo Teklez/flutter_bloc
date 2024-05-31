@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:frontend/domain/storage/storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,8 @@ class AuthService {
       );
       if (response.statusCode == 201) {
         final access_token = json.decode(response.body)['access_token'];
+
+        UserPreferences.saveAccessToken(access_token);
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', access_token);
@@ -90,10 +93,12 @@ class AuthService {
   Future update(String id, String username, String newPassword,
       String oldPassword) async {
     try {
+      String? accessToken = await UserPreferences.getAccessToken();
       final response = await http.put(
         Uri.parse('$baseUrl/auth/user/update/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken'
         },
         body: jsonEncode({
           'oldPassword': oldPassword,
@@ -117,7 +122,12 @@ class AuthService {
   // logout user
 
   Future<void> logout(message) async {
-    final response = await http.get(Uri.parse('$baseUrl/auth/logout'));
+    String? accessToken = await UserPreferences.getAccessToken();
+    final response = await http
+        .get(Uri.parse('$baseUrl/auth/logout'), headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $accessToken'
+    });
 
     if (response.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
